@@ -4,20 +4,23 @@
 #include <constants.hpp>
 
 class GameState {
-  PiecesConstants::COLORS userColor;
-  PiecesConstants::COLORS activeColor;
+  PiecesConstants::PIECE_COLORS userColor;
+  PiecesConstants::PIECE_COLORS activeColor;
   GameStateConstants::GAME_STATUS gameStatus;
 
-public:
   GameState() :
     userColor(PiecesConstants::WHITE),
     activeColor(PiecesConstants::WHITE),
     gameStatus(GameStateConstants::ACTIVE) {}
 
+public:
+  static GameState& instance();
+  void moveMade();
   void restart();
 
-  [[nodiscard]] PiecesConstants::COLORS getUserColor() const { return userColor; }
-  [[nodiscard]] GameStateConstants::GAME_STATUS getGameStatus() const { return gameStatus; }
+  [[nodiscard]] PiecesConstants::PIECE_COLORS getUserColor() const { return this->userColor; }
+  [[nodiscard]] PiecesConstants::PIECE_COLORS getActiveColor() const { return this->activeColor; }
+  [[nodiscard]] GameStateConstants::GAME_STATUS getGameStatus() const { return this->gameStatus; }
 };
 
 #endif

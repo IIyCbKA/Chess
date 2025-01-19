@@ -1,7 +1,7 @@
-#include <Piece.hpp>
+#include <pieces/Piece.hpp>
 #include <ResourceManager.hpp>
 
-Piece::Piece(PiecesConstants::COLORS color, PiecesConstants::PIECES piece) {
+Piece::Piece(PiecesConstants::PIECE_COLORS color, PiecesConstants::PIECE_TYPES piece) {
   this->color = color;
   QSvgRenderer* renderer = ResourceManager::instance()
     .getRenderer(color, piece);
@@ -13,7 +13,7 @@ Piece::Piece(PiecesConstants::COLORS color, PiecesConstants::PIECES piece) {
 }
 
 
-void Piece::svgIconUpdate(size_t row, size_t col, double squareSize) {
-  this->svgIcon->setPos(col * squareSize, row * squareSize);
+void Piece::svgIconUpdate(const Position curPosition, const double squareSize) {
+  this->svgIcon->setPos(curPosition.col * squareSize, curPosition.row * squareSize);
   this->svgIcon->setScale(squareSize / this->svgIcon->boundingRect().width());
 }

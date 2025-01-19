@@ -8,39 +8,39 @@ ResourceManager& ResourceManager::instance() {
 
 
 ResourceManager::ResourceManager() {
-  renderers[PiecesConstants::COLORS::WHITE][PiecesConstants::PIECES::PAWN] =
+  this->renderers[PiecesConstants::PIECE_COLORS::WHITE][PiecesConstants::PIECE_TYPES::PAWN] =
     new QSvgRenderer(QString(":/images/wPawn.svg"));
-  renderers[PiecesConstants::COLORS::BLACK][PiecesConstants::PIECES::PAWN] =
+  this->renderers[PiecesConstants::PIECE_COLORS::BLACK][PiecesConstants::PIECE_TYPES::PAWN] =
     new QSvgRenderer(QString(":/images/bPawn.svg"));
-  renderers[PiecesConstants::COLORS::WHITE][PiecesConstants::PIECES::KING] =
+  this->renderers[PiecesConstants::PIECE_COLORS::WHITE][PiecesConstants::PIECE_TYPES::KING] =
     new QSvgRenderer(QString(":/images/wKing.svg"));
-  renderers[PiecesConstants::COLORS::BLACK][PiecesConstants::PIECES::KING] =
+  this->renderers[PiecesConstants::PIECE_COLORS::BLACK][PiecesConstants::PIECE_TYPES::KING] =
     new QSvgRenderer(QString(":/images/bKing.svg"));
-  renderers[PiecesConstants::COLORS::WHITE][PiecesConstants::PIECES::QUEEN] =
+  this->renderers[PiecesConstants::PIECE_COLORS::WHITE][PiecesConstants::PIECE_TYPES::QUEEN] =
     new QSvgRenderer(QString(":/images/wQueen.svg"));
-  renderers[PiecesConstants::COLORS::BLACK][PiecesConstants::PIECES::QUEEN] =
+  this->renderers[PiecesConstants::PIECE_COLORS::BLACK][PiecesConstants::PIECE_TYPES::QUEEN] =
     new QSvgRenderer(QString(":/images/bQueen.svg"));
-  renderers[PiecesConstants::COLORS::WHITE][PiecesConstants::PIECES::ROOK] =
+  this->renderers[PiecesConstants::PIECE_COLORS::WHITE][PiecesConstants::PIECE_TYPES::ROOK] =
     new QSvgRenderer(QString(":/images/wRook.svg"));
-  renderers[PiecesConstants::COLORS::BLACK][PiecesConstants::PIECES::ROOK] =
+  this->renderers[PiecesConstants::PIECE_COLORS::BLACK][PiecesConstants::PIECE_TYPES::ROOK] =
     new QSvgRenderer(QString(":/images/bRook.svg"));
-  renderers[PiecesConstants::COLORS::WHITE][PiecesConstants::PIECES::BISHOP] =
+  this->renderers[PiecesConstants::PIECE_COLORS::WHITE][PiecesConstants::PIECE_TYPES::BISHOP] =
     new QSvgRenderer(QString(":/images/wBishop.svg"));
-  renderers[PiecesConstants::COLORS::BLACK][PiecesConstants::PIECES::BISHOP] =
+  this->renderers[PiecesConstants::PIECE_COLORS::BLACK][PiecesConstants::PIECE_TYPES::BISHOP] =
     new QSvgRenderer(QString(":/images/bBishop.svg"));
-  renderers[PiecesConstants::COLORS::WHITE][PiecesConstants::PIECES::KNIGHT] =
+  this->renderers[PiecesConstants::PIECE_COLORS::WHITE][PiecesConstants::PIECE_TYPES::KNIGHT] =
     new QSvgRenderer(QString(":/images/wKnight.svg"));
-  renderers[PiecesConstants::COLORS::BLACK][PiecesConstants::PIECES::KNIGHT] =
+  this->renderers[PiecesConstants::PIECE_COLORS::BLACK][PiecesConstants::PIECE_TYPES::KNIGHT] =
     new QSvgRenderer(QString(":/images/bKnight.svg"));
 }
 
 
 QSvgRenderer* ResourceManager::getRenderer(
-  PiecesConstants::COLORS color,
-  PiecesConstants::PIECES piece
+  PiecesConstants::PIECE_COLORS color,
+  PiecesConstants::PIECE_TYPES piece
 ) const {
-  if (renderers.contains(color) && renderers[color].contains(piece)) {
-    return renderers[color][piece];
+  if (this->renderers.contains(color) && this->renderers[color].contains(piece)) {
+    return this->renderers[color][piece];
   }
 
   return nullptr;

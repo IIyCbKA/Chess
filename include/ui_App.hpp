@@ -6,8 +6,12 @@
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
 
-#ifndef UI_APP_H
-#define UI_APP_H
+#ifndef UI_APP_HPP
+#define UI_APP_HPP
+
+#include <components/ChessBoard.hpp>
+#include <components/HistoryTable.hpp>
+#include <constants.hpp>
 
 #include <QtCore/QVariant>
 #include <QtGui/QIcon>
@@ -15,11 +19,10 @@
 #include <QtWidgets/QFrame>
 #include <QtWidgets/QGridLayout>
 #include <QtWidgets/QHeaderView>
+#include <QtWidgets/QLabel>
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QWidget>
-#include "ChessBoard.hpp"
-#include "HistoryTable.hpp"
 
 QT_BEGIN_NAMESPACE
 
@@ -42,9 +45,8 @@ public:
     QPushButton *hardBotBtn;
     QFrame *tableFrame;
     QGridLayout *tableFrameGridLayout;
+    QLabel *moveIndicator;
     HistoryTable *tableView;
-    QFrame *upperIndicator;
-    QFrame *lowerIndicator;
     QPushButton *restartGameBtn;
 
     void setupUi(QMainWindow *MainWindow)
@@ -58,20 +60,14 @@ public:
         centralWidget = new QWidget(MainWindow);
         centralWidget->setObjectName("centralWidget");
         centralWidget->setMinimumSize(QSize(1200, 675));
-        QFont font;
-        font.setFamilies({QString::fromUtf8("Ubuntu Sans Mono")});
-        centralWidget->setFont(font);
         centralWidget->setLayoutDirection(Qt::LeftToRight);
-        centralWidget->setStyleSheet(QString::fromUtf8("background-color: rgb(82, 115, 63);"));
+        centralWidget->setStyleSheet(QString::fromUtf8("background-color: rgb(49, 45, 42);"));
         centralWidgetGridLayout = new QGridLayout(centralWidget);
         centralWidgetGridLayout->setObjectName("centralWidgetGridLayout");
         centralWidgetGridLayout->setContentsMargins(0, 0, 0, 0);
         rootFrame = new QFrame(centralWidget);
         rootFrame->setObjectName("rootFrame");
         rootFrame->setMinimumSize(QSize(1200, 675));
-        QFont font1;
-        font1.setBold(true);
-        rootFrame->setFont(font1);
         rootFrame->setStyleSheet(QString::fromUtf8("border: none;\n"
 "outline: none;"));
         rootFrame->setFrameShape(QFrame::StyledPanel);
@@ -114,9 +110,8 @@ public:
         gameStateFrame->setFrameShape(QFrame::StyledPanel);
         gameStateFrame->setFrameShadow(QFrame::Raised);
         gameStateFrameGridLayout = new QGridLayout(gameStateFrame);
+        gameStateFrameGridLayout->setSpacing(10);
         gameStateFrameGridLayout->setObjectName("gameStateFrameGridLayout");
-        gameStateFrameGridLayout->setHorizontalSpacing(10);
-        gameStateFrameGridLayout->setVerticalSpacing(20);
         gameStateFrameGridLayout->setContentsMargins(0, 0, 0, 0);
         btnsFrame = new QFrame(gameStateFrame);
         btnsFrame->setObjectName("btnsFrame");
@@ -125,27 +120,25 @@ public:
         btnsFrame->setFrameShadow(QFrame::Raised);
         btnsFrameGridLayout = new QGridLayout(btnsFrame);
         btnsFrameGridLayout->setObjectName("btnsFrameGridLayout");
-        btnsFrameGridLayout->setContentsMargins(5, 5, 5, 5);
+        btnsFrameGridLayout->setContentsMargins(0, 5, 0, 5);
         easyBotBtn = new QPushButton(btnsFrame);
         easyBotBtn->setObjectName("easyBotBtn");
         easyBotBtn->setMinimumSize(QSize(0, 40));
-        QFont font2;
-        font2.setPointSize(12);
-        easyBotBtn->setFont(font2);
+        easyBotBtn->setFont(ConstantsUI::FONT_TITLE);
         easyBotBtn->setStyleSheet(QString::fromUtf8("QPushButton {\n"
-"    background-color: rgb(66, 93, 52);\n"
+"    background-color: rgb(70, 66, 65);\n"
 "    outline: none;\n"
 "    border: none;\n"
 "	border-radius: 10px;\n"
 "}\n"
 "\n"
 "QPushButton:hover {\n"
-"	background-color: rgb(59, 89, 43);\n"
+"	background-color: rgb(82, 78, 77);\n"
 "}\n"
 "\n"
 "QPushButton:pressed {\n"
 "	padding: 0;\n"
-"	background-color: rgb(56, 80, 45);\n"
+"	background-color: rgb(63, 59, 58);\n"
 "}\n"
 ""));
 
@@ -154,21 +147,21 @@ public:
         mediumBotBtn = new QPushButton(btnsFrame);
         mediumBotBtn->setObjectName("mediumBotBtn");
         mediumBotBtn->setMinimumSize(QSize(0, 40));
-        mediumBotBtn->setFont(font2);
+        mediumBotBtn->setFont(ConstantsUI::FONT_TITLE);
         mediumBotBtn->setStyleSheet(QString::fromUtf8("QPushButton {\n"
-"    background-color: rgb(66, 93, 52);\n"
+"    background-color: rgb(70, 66, 65);\n"
 "    outline: none;\n"
 "    border: none;\n"
 "	border-radius: 10px;\n"
 "}\n"
 "\n"
 "QPushButton:hover {\n"
-"	background-color: rgb(59, 89, 43);\n"
+"	background-color: rgb(82, 78, 77);\n"
 "}\n"
 "\n"
 "QPushButton:pressed {\n"
 "	padding: 0;\n"
-"	background-color: rgb(56, 80, 45);\n"
+"	background-color: rgb(63, 59, 58);\n"
 "}\n"
 ""));
 
@@ -177,21 +170,21 @@ public:
         hardBotBtn = new QPushButton(btnsFrame);
         hardBotBtn->setObjectName("hardBotBtn");
         hardBotBtn->setMinimumSize(QSize(0, 40));
-        hardBotBtn->setFont(font2);
+        hardBotBtn->setFont(ConstantsUI::FONT_TITLE);
         hardBotBtn->setStyleSheet(QString::fromUtf8("QPushButton {\n"
-"    background-color: rgb(66, 93, 52);\n"
+"    background-color: rgb(70, 66, 65);\n"
 "    outline: none;\n"
 "    border: none;\n"
 "	border-radius: 10px;\n"
 "}\n"
 "\n"
 "QPushButton:hover {\n"
-"	background-color: rgb(59, 89, 43);\n"
+"	background-color: rgb(82, 78, 77);\n"
 "}\n"
 "\n"
 "QPushButton:pressed {\n"
 "	padding: 0;\n"
-"	background-color: rgb(56, 80, 45);\n"
+"	background-color: rgb(63, 59, 58);\n"
 "}\n"
 ""));
 
@@ -207,38 +200,23 @@ public:
         tableFrame->setFrameShape(QFrame::StyledPanel);
         tableFrame->setFrameShadow(QFrame::Raised);
         tableFrameGridLayout = new QGridLayout(tableFrame);
-        tableFrameGridLayout->setSpacing(0);
         tableFrameGridLayout->setObjectName("tableFrameGridLayout");
+        tableFrameGridLayout->setHorizontalSpacing(0);
+        tableFrameGridLayout->setVerticalSpacing(6);
         tableFrameGridLayout->setContentsMargins(0, 0, 0, 0);
+        moveIndicator = new QLabel(tableFrame);
+        moveIndicator->setObjectName("moveIndicator");
+        moveIndicator->setMinimumSize(QSize(0, 24));
+        moveIndicator->setFont(ConstantsUI::FONT_TITLE);
+        moveIndicator->setStyleSheet(QString::fromUtf8("color: rgb(252, 252, 252);"));
+
+        tableFrameGridLayout->addWidget(moveIndicator, 1, 0, 1, 1);
+
         tableView = new HistoryTable(tableFrame);
         tableView->setObjectName("tableView");
-        tableView->setStyleSheet(QString::fromUtf8("background-color: rgb(66, 93, 52);"));
+        tableView->setStyleSheet(QString::fromUtf8("background-color: rgb(70, 66, 65);"));
 
-        tableFrameGridLayout->addWidget(tableView, 1, 0, 1, 1);
-
-        upperIndicator = new QFrame(tableFrame);
-        upperIndicator->setObjectName("upperIndicator");
-        upperIndicator->setMinimumSize(QSize(0, 32));
-        upperIndicator->setMaximumSize(QSize(160, 16777215));
-        upperIndicator->setStyleSheet(QString::fromUtf8("border-top-left-radius: 10px;\n"
-"border-top-right-radius: 10px;\n"
-"border: 3px solid #55841f;"));
-        upperIndicator->setFrameShape(QFrame::HLine);
-        upperIndicator->setFrameShadow(QFrame::Sunken);
-
-        tableFrameGridLayout->addWidget(upperIndicator, 0, 0, 1, 2);
-
-        lowerIndicator = new QFrame(tableFrame);
-        lowerIndicator->setObjectName("lowerIndicator");
-        lowerIndicator->setMinimumSize(QSize(0, 32));
-        lowerIndicator->setMaximumSize(QSize(160, 16777215));
-        lowerIndicator->setStyleSheet(QString::fromUtf8("border-bottom-left-radius: 10px;\n"
-"border-bottom-right-radius: 10px;\n"
-"border: 3px solid #55841f;"));
-        lowerIndicator->setFrameShape(QFrame::HLine);
-        lowerIndicator->setFrameShadow(QFrame::Sunken);
-
-        tableFrameGridLayout->addWidget(lowerIndicator, 2, 0, 1, 2);
+        tableFrameGridLayout->addWidget(tableView, 0, 0, 1, 1);
 
 
         gameStateFrameGridLayout->addWidget(tableFrame, 0, 0, 1, 1);
@@ -247,7 +225,7 @@ public:
         restartGameBtn->setObjectName("restartGameBtn");
         restartGameBtn->setMinimumSize(QSize(0, 50));
         QPalette palette;
-        QBrush brush(QColor(66, 93, 52, 255));
+        QBrush brush(QColor(70, 66, 65, 255));
         brush.setStyle(Qt::SolidPattern);
         palette.setBrush(QPalette::Active, QPalette::Button, brush);
         palette.setBrush(QPalette::Active, QPalette::Base, brush);
@@ -259,26 +237,22 @@ public:
         palette.setBrush(QPalette::Disabled, QPalette::Base, brush);
         palette.setBrush(QPalette::Disabled, QPalette::Window, brush);
         restartGameBtn->setPalette(palette);
-        QFont font3;
-        font3.setFamilies({QString::fromUtf8("Ubuntu Sans")});
-        font3.setPointSize(12);
-        font3.setBold(false);
-        restartGameBtn->setFont(font3);
+        restartGameBtn->setFont(ConstantsUI::FONT_TITLE);
         restartGameBtn->setCursor(QCursor(Qt::ArrowCursor));
         restartGameBtn->setStyleSheet(QString::fromUtf8("QPushButton {\n"
-"    background-color: rgb(66, 93, 52);\n"
+"    background-color: rgb(70, 66, 65);\n"
 "    outline: none;\n"
 "    border: none;\n"
 "	border-radius: 10px;\n"
 "}\n"
 "\n"
 "QPushButton:hover {\n"
-"	background-color: rgb(59, 89, 43);\n"
+"	background-color: rgb(82, 78, 77);\n"
 "}\n"
 "\n"
 "QPushButton:pressed {\n"
 "	padding: 0;\n"
-"	background-color: rgb(56, 80, 45);\n"
+"	background-color: rgb(63, 59, 58);\n"
 "}\n"
 ""));
 
@@ -303,7 +277,8 @@ public:
         easyBotBtn->setText(QCoreApplication::translate("MainWindow", "Easy", nullptr));
         mediumBotBtn->setText(QCoreApplication::translate("MainWindow", "Medium", nullptr));
         hardBotBtn->setText(QCoreApplication::translate("MainWindow", "Hard", nullptr));
-        restartGameBtn->setText(QCoreApplication::translate("MainWindow", "RESTART", nullptr));
+        moveIndicator->setText(QCoreApplication::translate("MainWindow", "Your move", nullptr));
+        restartGameBtn->setText(QCoreApplication::translate("MainWindow", "Restart", nullptr));
     } // retranslateUi
 
 };
@@ -314,4 +289,4 @@ namespace Ui {
 
 QT_END_NAMESPACE
 
-#endif // UI_APP_H
+#endif // UI_APP_HPP

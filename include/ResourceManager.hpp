@@ -8,8 +8,8 @@
 
 class ResourceManager {
   QHash <
-    PiecesConstants::COLORS,
-    QHash<PiecesConstants::PIECES, QSvgRenderer*>
+    PiecesConstants::PIECE_COLORS,
+    QHash<PiecesConstants::PIECE_TYPES, QSvgRenderer*>
   > renderers;
 
   ResourceManager();
@@ -18,8 +18,8 @@ public:
   static ResourceManager& instance();
 
   [[nodiscard]] QSvgRenderer* getRenderer(
-    PiecesConstants::COLORS color,
-    PiecesConstants::PIECES piece
+    PiecesConstants::PIECE_COLORS color,
+    PiecesConstants::PIECE_TYPES piece
   ) const ;
 
   ResourceManager(const ResourceManager&) = delete;

@@ -1,4 +1,4 @@
-#include <MainWindow.hpp>
+#include <components/MainWindow.hpp>
 
 #include <QApplication>
 
