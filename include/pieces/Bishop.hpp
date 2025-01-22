@@ -11,10 +11,7 @@ public:
     Piece(color, PiecesConstants::BISHOP) {}
 
   vector<Position> getPossibleMoves(
-    const array <
-      array<unique_ptr<Square>, BoardConstants::SQUARES_ROWS_COLS>,
-      BoardConstants::SQUARES_ROWS_COLS
-    >& board, Position curPosition
+    const Board& board, Position curPosition
   ) override;
 
   ~Bishop() override = default;

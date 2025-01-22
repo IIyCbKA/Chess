@@ -116,15 +116,16 @@ void ChessBoard::updateSizes() {
 
 
 void ChessBoard::deselectSquare() {
-  this->selectedSquare->getRect()->deselectSquare();
-  this->selectedSquare = nullptr;
-  for (const auto [row, col] : this->selectedCanMove) {
-    board[row][col]->hideCircle();
+  if (this->selectedSquare) {
+    this->selectedSquare->getRect()->deselectSquare();
+    this->selectedSquare = nullptr;
+    for (const auto [row, col] : this->selectedCanMove) {
+      this->board[row][col]->hideCircle();
+    }
   }
 }
 
 
-// primitive mechanics
 void ChessBoard::clickOnSquare(Square *square) {
   if (this->selectedSquare && this->selectedSquare == square) {
     deselectSquare();
@@ -135,15 +136,14 @@ void ChessBoard::clickOnSquare(Square *square) {
     square->getPiece() &&
     square->getPiece()->getColor() == GameState::instance().getActiveColor()
   ) {
-    if (this->selectedSquare) deselectSquare();
-
+    deselectSquare();
     this->selectedSquare = square;
     this->selectedCanMove = this->selectedSquare->getPiece()->getPossibleMoves(
-      board, this->selectedSquare->getRealPos()
+      this->board, this->selectedSquare->getRealPos()
     );
     this->selectedSquare->getRect()->selectSquare();
   } else if (this->selectedSquare) {
-    movePiece(square);
+    if (isSelectedCanMoveTo(square->getRealPos())) movePiece(square);
     deselectSquare();
   }
 }
@@ -168,14 +168,24 @@ void ChessBoard::movePiece(Square *toSquare) {
     this->board[to.row][to.col]->getRect()
   );
   this->board[to.row][to.col]->pieceSvgIconUpdate(this->squareSize);
+  this->board[to.row][to.col]->getPiece()->move();
   emit moveMade(from, to);
 }
 
 
 void ChessBoard::cleanBoard() {
+  deselectSquare();
   for (size_t row = 0; row < BoardConstants::SQUARES_ROWS_COLS; ++row) {
     for (size_t col = 0; col < BoardConstants::SQUARES_ROWS_COLS; ++col) {
       deletePiece({row, col});
     }
   }
+}
+
+
+bool ChessBoard::isSelectedCanMoveTo(const Position to) const {
+  return ranges::any_of(
+    this->selectedCanMove,
+    [to](const auto& pos) { return pos.row == to.row && pos.col == to.col; }
+  );
 }

@@ -3,16 +3,16 @@
 #include <constants.hpp>
 
 HistoryTable::HistoryTable(QWidget *parent) : QTableView(parent) {
-  model = new QStandardItemModel(0, 3, this);
+  this->model = new QStandardItemModel(0, 3, this);
   this->setFont(ConstantsUI::FONT_TEXT);
 
-  model->setHorizontalHeaderLabels({
+  this->model->setHorizontalHeaderLabels({
     ConstantsUI::FIRST_HISTORY_TITLE,
     ConstantsUI::SECOND_HISTORY_TITLE,
     ConstantsUI::THIRD_HISTORY_TITLE
   });
 
-  QTableView::setModel(model);
+  QTableView::setModel(this->model);
 
   verticalHeader()->setVisible(false);
   this->horizontalHeader()->setSectionResizeMode(
@@ -37,10 +37,10 @@ HistoryTable::HistoryTable(QWidget *parent) : QTableView(parent) {
 
 
 void HistoryTable::updateHighlighted(QStandardItem* newItem) {
-  if (highlightedItem) highlightedItem->setBackground(QBrush());
+  if (this->highlightedItem) this->highlightedItem->setBackground(QBrush());
 
-  highlightedItem = newItem;
-  highlightedItem->setBackground(Colors::MIDNIGHT);
+  this->highlightedItem = newItem;
+  this->highlightedItem->setBackground(Colors::MIDNIGHT);
 }
 
 
@@ -56,16 +56,16 @@ QString HistoryTable::moveToStr(const Position from, const Position to) {
 void HistoryTable::addWhiteMove(const Position from, const Position to) {
   using namespace ConstantsUI;
 
-  const int row = model->rowCount();
-  model->insertRow(row);
+  const int row = this->model->rowCount();
+  this->model->insertRow(row);
 
   auto *itemNumber = new QStandardItem(QString::number(row + 1));
   itemNumber->setTextAlignment(Qt::AlignCenter);
-  model->setItem(row, HISTORY_TABLE_COLS::NUMBER_OF_PAIR, itemNumber);
+  this->model->setItem(row, HISTORY_TABLE_COLS::NUMBER_OF_PAIR, itemNumber);
 
   auto *itemWhite = new QStandardItem(moveToStr(from, to));
   itemWhite->setTextAlignment(Qt::AlignCenter);
-  model->setItem(row, HISTORY_TABLE_COLS::WHITE_MOVE, itemWhite);
+  this->model->setItem(row, HISTORY_TABLE_COLS::WHITE_MOVE, itemWhite);
   updateHighlighted(itemWhite);
 }
 
@@ -73,16 +73,16 @@ void HistoryTable::addWhiteMove(const Position from, const Position to) {
 void HistoryTable::addBlackMove(const Position from, const Position to) {
   using namespace ConstantsUI;
 
-  const int row = model->rowCount() - 1;
+  const int row = this->model->rowCount() - 1;
 
   auto *itemBlack = new QStandardItem(moveToStr(from, to));
   itemBlack->setTextAlignment(Qt::AlignCenter);
-  model->setItem(row, HISTORY_TABLE_COLS::BLACK_MOVE, itemBlack);
+  this->model->setItem(row, HISTORY_TABLE_COLS::BLACK_MOVE, itemBlack);
   updateHighlighted(itemBlack);
 }
 
 
 void HistoryTable::cleanTable() {
-  model->setRowCount(0);
-  highlightedItem = nullptr;
+  this->model->setRowCount(0);
+  this->highlightedItem = nullptr;
 }

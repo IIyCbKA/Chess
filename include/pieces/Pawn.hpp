@@ -6,15 +6,23 @@
 #include <constants.hpp>
 
 class Pawn : public Piece {
+  static bool tryAddDefaultMove(
+    const Board& board, Position curPosition,
+    int deltaRow, int deltaCol, vector<Position>& moves
+  );
+  void getDefaultMoves(
+    const Board& board, Position curPosition, vector<Position>& moves
+  ) const;
+  void getAttackMoves(
+    const Board& board, Position curPosition, vector<Position>& moves
+  ) const;
+
 public:
   explicit Pawn(PiecesConstants::PIECE_COLORS color) :
     Piece(color, PiecesConstants::PAWN) {}
 
   vector<Position> getPossibleMoves(
-    const array <
-      array<unique_ptr<Square>, BoardConstants::SQUARES_ROWS_COLS>,
-      BoardConstants::SQUARES_ROWS_COLS
-    >& board, Position curPosition
+    const Board& board, Position curPosition
   ) override;
 
   ~Pawn() override = default;

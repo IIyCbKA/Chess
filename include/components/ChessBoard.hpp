@@ -22,6 +22,7 @@ class ChessBoard : public QGraphicsView {
   vector<Position> selectedCanMove;
 
   void resizeEvent(QResizeEvent *event) override;
+  [[nodiscard]] bool isSelectedCanMoveTo(Position to) const;
 
 public:
   explicit ChessBoard(QFrame *parent = nullptr);
@@ -33,8 +34,8 @@ public:
   void deselectSquare();
   void movePiece(Square *toSquare);
   void deletePiece(Position from);
-  void cleanBoard();
   void placePiece(unique_ptr<Piece> piece, Position to);
+  void cleanBoard();
 
   ~ChessBoard() override = default;
 

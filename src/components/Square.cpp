@@ -25,7 +25,7 @@ Square::Square(const Position initPosition, const double squareSize)
 }
 
 
-void Square::setRectByPos(double squareSize) {
+void Square::setRectByPos(const double squareSize) {
   this->rect->setRect(
     this->drawPosition.col * squareSize,
     this->drawPosition.row * squareSize,
@@ -35,8 +35,8 @@ void Square::setRectByPos(double squareSize) {
 }
 
 
-void Square::setCircleByPos(double squareSize) {
-  double circleSize = squareSize * 0.3;
+void Square::setCircleByPos(const double squareSize) {
+  const double circleSize = squareSize * 0.3;
   this->circle->setRect(
     this->drawPosition.col * squareSize + (squareSize - circleSize) / 2,
     this->drawPosition.row * squareSize + (squareSize - circleSize) / 2,

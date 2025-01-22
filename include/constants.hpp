@@ -1,9 +1,13 @@
 #ifndef CONSTANTS_HPP
 #define CONSTANTS_HPP
 
+#include <array>
 #include <QColor>
 #include <QFont>
+#include <QHash>
 #include <QString>
+
+using namespace std;
 
 QFont createFont(int pointSize);
 
@@ -32,6 +36,39 @@ namespace PiecesConstants {
     BISHOP,
     PAWN,
     QUEEN,
+  };
+
+  constexpr array<pair<int, int>, 4> BISHOP_MOVES = {{
+    {-1, -1}, {-1, 1}, {1, -1}, {1, 1}
+  }};
+
+  constexpr array<pair<int, int>, 8> KNIGHT_MOVES = {{
+    {2, 1}, {-2, 1}, {-1, -2}, {-1, 2},
+    {1, -2}, {1, 2}, {2, -1}, {-2, -1}
+  }};
+
+  constexpr array<pair<int, int>, 8> QUEEN_MOVES = {{
+    {-1, 0}, {0, 1}, {1, 0}, {0, -1},
+    {-1, -1}, {-1, 1}, {1, -1}, {1, 1}
+  }};
+
+  constexpr array<pair<int, int>, 4> ROOK_MOVES = {{
+    {-1, 0}, {0, 1}, {1, 0}, {0, -1}
+  }};
+
+  constexpr array<pair<int, int>, 8> KING_MOVES = {{
+    {-1, -1}, {-1, 0}, {-1, 1}, {0, 1},
+    {1, 1}, {1, 0}, {1, -1}, {0, -1}
+  }};
+
+  const QHash<PIECE_COLORS, pair<int, int>> PAWN_DEFAULT_MOVE = {
+    {PIECE_COLORS::WHITE, {-1, 0}},
+    {PIECE_COLORS::BLACK, {1, 0}},
+  };
+
+  const QHash<PIECE_COLORS, array<pair<int, int>, 2>> PAWN_ATTACK_MOVES = {
+    {PIECE_COLORS::WHITE, {{{-1, -1}, {-1, 1}}}},
+    {PIECE_COLORS::BLACK, {{{1, -1}, {1, 1}}}},
   };
 }
 

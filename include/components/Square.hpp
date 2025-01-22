@@ -31,7 +31,7 @@ public:
   void hideCircle() { circle->setVisible(false); }
 
   void addPiece(unique_ptr<Piece> piece) { this->piece = std::move(piece); }
-  void pieceSvgIconUpdate(double squareSize) {
+  void pieceSvgIconUpdate(const double squareSize) {
     this->piece->svgIconUpdate(this->drawPosition, squareSize);
   }
   void clearPiece();

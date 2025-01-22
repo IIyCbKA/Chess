@@ -33,8 +33,8 @@ void MainWindow::onRestartGameClicked() {
 
 void MainWindow::onMoveMade(Position from, Position to) {
   if (GameState::instance().getActiveColor() == PiecesConstants::PIECE_COLORS::WHITE)
-    ui.tableView->addWhiteMove(from, to);
-  else ui.tableView->addBlackMove(from, to);
+    this->ui.tableView->addWhiteMove(from, to);
+  else this->ui.tableView->addBlackMove(from, to);
 
   GameState::instance().moveMade();
   updateMoveIndicator();
