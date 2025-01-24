@@ -1,4 +1,4 @@
-#include <components/HistoryTable.hpp>
+#include <ui/HistoryTable.hpp>
 #include <utils/utils.hpp>
 #include <constants.hpp>
 

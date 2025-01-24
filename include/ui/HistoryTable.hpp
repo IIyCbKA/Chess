@@ -8,8 +8,6 @@
 #include <QString>
 #include <QTableView>
 
-using namespace std;
-
 class HistoryTable : public QTableView {
   QStandardItemModel *model = nullptr;
   QStandardItem *highlightedItem = nullptr;

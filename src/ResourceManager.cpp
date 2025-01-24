@@ -36,8 +36,8 @@ ResourceManager::ResourceManager() {
 
 
 QSvgRenderer* ResourceManager::getRenderer(
-  PiecesConstants::PIECE_COLORS color,
-  PiecesConstants::PIECE_TYPES piece
+  const PiecesConstants::PIECE_COLORS color,
+  const PiecesConstants::PIECE_TYPES piece
 ) const {
   if (this->renderers.contains(color) && this->renderers[color].contains(piece)) {
     return this->renderers[color][piece];

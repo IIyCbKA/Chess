@@ -9,8 +9,8 @@
 #ifndef UI_APP_HPP
 #define UI_APP_HPP
 
-#include <components/ChessBoard.hpp>
-#include <components/HistoryTable.hpp>
+#include <ui/BoardView.hpp>
+#include <ui/HistoryTable.hpp>
 #include <constants.hpp>
 
 #include <QtCore/QVariant>
@@ -35,7 +35,7 @@ public:
     QGridLayout *rootFrameGridLayout;
     QFrame *boardFrame;
     QGridLayout *boardFrameGridLayout;
-    ChessBoard *chessBoardView;
+    BoardView *chessBoardView;
     QFrame *gameStateFrame;
     QGridLayout *gameStateFrameGridLayout;
     QFrame *btnsFrame;
@@ -92,7 +92,7 @@ public:
         boardFrameGridLayout = new QGridLayout(boardFrame);
         boardFrameGridLayout->setObjectName("boardFrameGridLayout");
         boardFrameGridLayout->setContentsMargins(0, 0, 0, 0);
-        chessBoardView = new ChessBoard(boardFrame);
+        chessBoardView = new BoardView(boardFrame);
         chessBoardView->setObjectName("chessBoardView");
         chessBoardView->setMinimumSize(QSize(640, 640));
         chessBoardView->setStyleSheet(QString::fromUtf8("border: none;"));

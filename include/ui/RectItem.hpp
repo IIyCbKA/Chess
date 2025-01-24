@@ -4,14 +4,14 @@
 #include <QGraphicsRectItem>
 #include <QObject>
 
-class Square;
+class SquareItem;
 
 class RectItem : public QObject, public QGraphicsRectItem {
   Q_OBJECT
-  Square* squareParent;
+  SquareItem* squareParent;
 
 public:
-  explicit RectItem(Square* squareParent, QGraphicsItem* graphicsParent = nullptr);
+  explicit RectItem(SquareItem* squareParent, QGraphicsItem* graphicsParent = nullptr);
 
   void selectSquare();
   void deselectSquare();

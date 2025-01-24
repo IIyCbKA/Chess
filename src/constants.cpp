@@ -5,5 +5,6 @@ QFont createFont(const int pointSize) {
   font.setFamilies({QString::fromUtf8("System-ui")});
   font.setPointSize(pointSize);
   font.setBold(true);
+
   return font;
 }

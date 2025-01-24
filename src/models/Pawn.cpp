@@ -1,18 +1,16 @@
-#include <components/Square.hpp>
-#include <pieces/Pawn.hpp>
+#include <models/Pawn.hpp>
 #include <constants.hpp>
 
 bool Pawn::tryAddDefaultMove(
   const Board& board, const Position curPosition,
-  const int deltaRow, const int deltaCol, vector<Position> &moves
+  const int deltaRow, const int deltaCol, std::vector<Position> &moves
 ) {
   if (isWithinBounds(curPosition, deltaRow, deltaCol)) {
     const size_t tempRow = curPosition.row + deltaRow;
     const size_t tempCol = curPosition.col + deltaCol;
 
-    if (!board[tempRow][tempCol]->getPiece()) {
+    if (!board[tempRow][tempCol].get()) {
       moves.emplace_back(tempRow, tempCol);
-      board[tempRow][tempCol]->showCircle();
       return true;
     }
   }
@@ -22,7 +20,7 @@ bool Pawn::tryAddDefaultMove(
 
 
 void Pawn::getDefaultMoves(
-  const Board& board, const Position curPosition, vector<Position>& moves
+  const Board& board, const Position curPosition, std::vector<Position>& moves
 ) const {
   auto [deltaRow, deltaCol] = PiecesConstants::PAWN_DEFAULT_MOVE[this->color];
   if (
@@ -37,7 +35,7 @@ void Pawn::getDefaultMoves(
 
 
 void Pawn::getAttackMoves(
-  const Board& board, const Position curPosition, vector<Position> &moves
+  const Board& board, const Position curPosition, std::vector<Position> &moves
 ) const {
   for (
     const auto [deltaRow, deltaCol] :
@@ -47,7 +45,7 @@ void Pawn::getAttackMoves(
       size_t tempRow = curPosition.row + deltaRow;
       size_t tempCol = curPosition.col + deltaCol;
 
-      if (const auto piece = board[tempRow][tempCol]->getPiece()) {
+      if (const auto piece = board[tempRow][tempCol].get()) {
         if (piece->getColor() != this->color) moves.emplace_back(tempRow, tempCol);
       }
     }
@@ -55,10 +53,10 @@ void Pawn::getAttackMoves(
 }
 
 
-vector<Position> Pawn::getPossibleMoves(
+std::vector<Position> Pawn::getPossibleMoves(
   const Board& board, const Position curPosition
 ) {
-  vector<Position> moves;
+  std::vector<Position> moves;
   getDefaultMoves(board, curPosition, moves);
   getAttackMoves(board, curPosition, moves);
 

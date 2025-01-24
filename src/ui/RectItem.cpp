@@ -1,10 +1,10 @@
-#include <components/RectItem.hpp>
-#include <components/Square.hpp>
+#include <ui/RectItem.hpp>
+#include <ui/SquareItem.hpp>
 #include <constants.hpp>
 
 #include <QBrush>
 
-RectItem::RectItem(Square* squareParent, QGraphicsItem* graphicsParent)
+RectItem::RectItem(SquareItem* squareParent, QGraphicsItem* graphicsParent)
   : QGraphicsRectItem(graphicsParent), squareParent(squareParent)
 {
   setAcceptHoverEvents(true);
