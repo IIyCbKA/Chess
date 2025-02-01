@@ -1,5 +1,8 @@
 #include <models/Pawn.hpp>
 #include <constants.hpp>
+#include <GameState.hpp>
+
+#include <algorithm>
 
 bool Pawn::tryAddDefaultMove(
   const Board& board, const Position curPosition,
@@ -47,9 +50,26 @@ void Pawn::getAttackMoves(
 
       if (const auto piece = board[tempRow][tempCol].get()) {
         if (piece->getColor() != this->color) moves.emplace_back(tempRow, tempCol);
+      } else if (tryGetEnPassantCapture({tempRow, tempCol})) {
+        moves.emplace_back(tempRow, tempCol);
       }
     }
   }
+}
+
+
+std::optional<EnPassant> Pawn::tryGetEnPassantCapture(const Position to) const {
+  if (
+    const auto enPassant = GameState::instance().getEnPassant();
+    enPassant.has_value()
+    && enPassant->enPassantPosition.row == to.row
+    && enPassant->enPassantPosition.col == to.col
+    && enPassant->pawnColor != this->color
+  ) {
+    return enPassant;
+  }
+
+  return std::nullopt;
 }
 
 
@@ -61,4 +81,27 @@ std::vector<Position> Pawn::getPossibleMoves(
   getAttackMoves(board, curPosition, moves);
 
   return moves;
+}
+
+
+Position Pawn::getCapturePosition(const Position from, const Position to) {
+  Position capturedPosition = to;
+
+  if (
+    auto [minRow, maxRow] = std::minmax(from.row, to.row);
+    maxRow - minRow == BoardConstants::PAWN_ROWS_MOVE_FOR_EN_PASSANT
+  ) {
+    const Position enPassantPosition = {minRow + 1, to.col};
+    GameState::instance().setEnPassant(
+      EnPassant{
+        .pawnPosition = to,
+        .enPassantPosition = enPassantPosition,
+        .pawnColor = this->color
+      }
+    );
+  } else if (const auto enPassant = tryGetEnPassantCapture(to)) {
+    capturedPosition = enPassant->pawnPosition;
+  }
+
+  return capturedPosition;
 }

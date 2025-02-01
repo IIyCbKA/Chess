@@ -5,6 +5,7 @@
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui() {
   this->ui.setupUi(this);
   this->boardModel = new BoardModel();
+  this->controller = new GameController(this->boardModel, this->ui.chessBoardView);
   connect(
     this->ui.restartGameBtn, &QPushButton::clicked,
     this, &MainWindow::onRestartGameClicked
@@ -18,11 +19,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui() {
     this, &MainWindow::onPieceRemoved
   );
   connect(
-    this->boardModel, &BoardModel::onPieceMoved,
-    this, &MainWindow::onPieceMoved
-  );
-  connect(
-    this->ui.chessBoardView, &BoardView::moveMade,
+    this->controller, &GameController::moveMade,
     this, &MainWindow::onMoveMade
   );
 }
@@ -62,11 +59,6 @@ void MainWindow::onMoveMade(const Position from, const Position to) const {
 
 void MainWindow::onModelBoardReset() const {
   this->ui.chessBoardView->boardReset();
-}
-
-
-void MainWindow::onPieceMoved(const Position from, const Position to) const {
-  this->ui.chessBoardView->movePiece(from, to);
 }
 
 

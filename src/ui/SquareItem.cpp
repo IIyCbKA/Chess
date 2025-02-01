@@ -88,5 +88,6 @@ void SquareItem::addIcon(
 
 
 void SquareItem::clearIcon() {
+  if (!this->svgIcon) return;
   delete this->svgIcon;
 }

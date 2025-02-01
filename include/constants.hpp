@@ -19,6 +19,7 @@ namespace Colors {
 
 namespace BoardConstants {
   inline constexpr size_t SQUARES_ROWS_COLS = 8;
+  inline constexpr size_t PAWN_ROWS_MOVE_FOR_EN_PASSANT = 2;
 }
 
 namespace PiecesConstants {

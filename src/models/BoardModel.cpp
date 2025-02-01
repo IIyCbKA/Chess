@@ -5,6 +5,7 @@
 #include <models/Pawn.hpp>
 #include <models/Queen.hpp>
 #include <models/Rook.hpp>
+#include <GameState.hpp>
 
 void BoardModel::setupPieces() {
   for (size_t col = 0; col < BoardConstants::SQUARES_ROWS_COLS; ++col) {
@@ -49,12 +50,16 @@ Piece* BoardModel::getPiece(const Position piecePosition) const {
 }
 
 
-std::vector<Position> BoardModel::getPossibleMoves(const Position from) const {
+void BoardModel::getPossibleMoves(const Position from) {
   if (this->board[from.row][from.col]) {
-    return this->board[from.row][from.col]->getPossibleMoves(this->board, from);
+    this->selectedCanMove =
+      this->board[from.row][from.col]->getPossibleMoves(this->board, from);
   }
+}
 
-  return {};
+
+std::vector<Position> BoardModel::getSelectedCanMove() const {
+  return this->selectedCanMove;
 }
 
 
@@ -71,9 +76,66 @@ void BoardModel::removePiece(const Position from) {
 }
 
 
-void BoardModel::movePiece(const Position from, const Position to) {
-  removePiece(to);
+void BoardModel::clearEnPassant() {
+  if (
+    const auto enPassant = GameState::instance().getEnPassant();
+    enPassant.has_value() &&
+    GameState::instance().getActiveColor() != enPassant->pawnColor
+  ) {
+    GameState::instance().clearEnPassant();
+  }
+}
+
+
+void BoardModel::movePiece(const Position to) {
+  const Position from = this->selectedPosition.value();
+  removePiece(this->board[from.row][from.col]->getCapturePosition(from, to));
   this->board[to.row][to.col] = std::move(this->board[from.row][from.col]);
   this->board[to.row][to.col]->move();
-  emit onPieceMoved(from, to);
+  clearEnPassant();
+}
+
+
+bool BoardModel::isSelectedCanMoveTo(const Position to) const {
+  return std::ranges::any_of(
+    this->selectedCanMove,
+    [to](const auto& pos) { return pos.row == to.row && pos.col == to.col; }
+  );
+}
+
+
+void BoardModel::deselectSquare() {
+  this->selectedPosition.reset();
+  this->selectedCanMove.clear();
+}
+
+
+void BoardModel::selectSquare(const Position to) {
+  this->selectedPosition = to;
+  getPossibleMoves(this->selectedPosition.value());
+}
+
+
+bool BoardModel::trySelectSquare(const Position to) const {
+  return
+    this->board[to.row][to.col] &&
+    this->board[to.row][to.col]->getColor() == GameState::instance().getActiveColor();
+}
+
+
+bool BoardModel::hasSelectedPiece() const {
+  return this->selectedPosition.has_value();
+}
+
+
+Position BoardModel::getSelectedPosition() const {
+  return this->selectedPosition.value();
+}
+
+
+bool BoardModel::isSamePosition(const Position pos) const {
+  return
+    this->selectedPosition.has_value() &&
+    this->selectedPosition->row == pos.row &&
+    this->selectedPosition->col == pos.col;
 }

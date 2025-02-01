@@ -18,12 +18,10 @@ class BoardView : public QGraphicsView {
   > board{};
   double boardSize = 0;
   double squareSize = 0;
-  SquareItem* selectedSquare = nullptr;
-  std::vector<Position> selectedCanMove;
 
   void resizeEvent(QResizeEvent *event) override;
   void setupPieces() const;
-  void cleanBoard();
+  void cleanBoard() const;
 
 public:
   explicit BoardView(QFrame* parent = nullptr);
@@ -31,20 +29,18 @@ public:
   void init(BoardModel* model);
   void turningBoard() const;
   void updateSizes();
-  void boardReset();
-  void selectSquare(SquareItem* square);
-  void deselectSquare();
-  void performMove(const SquareItem *toSquare);
+  void boardReset() const;
+  void highlightSquare(Position pos) const;
+  void showPossibleMoves(const std::vector<Position>& moves) const;
+  void clearHighlights() const;
   void removePiece(Position from) const;
   void movePiece(Position from, Position to) const;
 
-  [[nodiscard]] bool isSelectedCanMoveTo(Position to) const;
-
 signals:
-  void moveMade(Position from, Position to);
+  void squareClicked(Position pos);
 
 private slots:
-  void onSquareClicked(SquareItem* square);
+  void onSquareClicked(const SquareItem* square);
 };
 
 #endif //BOARDVIEW_HPP

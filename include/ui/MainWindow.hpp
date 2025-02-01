@@ -3,11 +3,13 @@
 
 #include <ui/ui_App.hpp>
 #include <utils/position.hpp>
+#include <GameController.hpp>
 
 class MainWindow : public QMainWindow {
   Q_OBJECT;
   Ui::MainWindow ui;
   BoardModel* boardModel = nullptr;
+  GameController* controller = nullptr;
 
   void updateMoveIndicator() const;
 
@@ -22,7 +24,6 @@ private slots:
   void onRestartGameClicked() const;
   void onMoveMade(Position from, Position to) const;
   void onModelBoardReset() const;
-  void onPieceMoved(Position from, Position to) const;
   void onPieceRemoved(Position from) const;
 };
 

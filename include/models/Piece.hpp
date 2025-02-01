@@ -20,11 +20,11 @@ protected:
 public:
   Piece(PiecesConstants::PIECE_COLORS color, PiecesConstants::PIECE_TYPES type);
 
+  void move() { this->isMoved = true; }
   static bool isWithinBounds(Position curPosition, int moveRow, int moveCol);
   [[nodiscard]] PiecesConstants::PIECE_COLORS getColor() const { return this->color; }
   [[nodiscard]] PiecesConstants::PIECE_TYPES getType() const { return this->type; }
-
-  void move() { this->isMoved = true; }
+  virtual Position getCapturePosition(const Position from, const Position to) { return to; }
   virtual std::vector<Position> getPossibleMoves(
     const Board& board, Position curPosition
   ) = 0;

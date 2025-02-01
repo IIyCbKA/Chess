@@ -2,8 +2,11 @@
 #define PAWN_HPP
 
 #include <models/Piece.hpp>
+#include <utils/enPassant.hpp>
 #include <utils/position.hpp>
 #include <constants.hpp>
+
+#include <optional>
 
 class Pawn : public Piece {
   static bool tryAddDefaultMove(
@@ -17,6 +20,8 @@ class Pawn : public Piece {
     const Board& board, Position curPosition, std::vector<Position>& moves
   ) const;
 
+  [[nodiscard]] std::optional<EnPassant> tryGetEnPassantCapture(Position to) const;
+
 public:
   explicit Pawn(const PiecesConstants::PIECE_COLORS color) :
     Piece(color, PiecesConstants::PAWN) {}
@@ -24,6 +29,7 @@ public:
   std::vector<Position> getPossibleMoves(
     const Board& board, Position curPosition
   ) override;
+  Position getCapturePosition(Position from, Position to) override;
 
   ~Pawn() override = default;
 };
