@@ -2,6 +2,7 @@
 #define MAINWINDOW_HPP
 
 #include <ui/ui_App.hpp>
+#include <utils/moveLog.hpp>
 #include <utils/position.hpp>
 #include <GameController.hpp>
 
@@ -22,7 +23,7 @@ public:
 
 private slots:
   void onRestartGameClicked() const;
-  void onMoveMade(Position from, Position to) const;
+  void onMoveMade(const MoveLog &log) const;
   void onModelBoardReset() const;
   void onPieceRemoved(Position from) const;
 };

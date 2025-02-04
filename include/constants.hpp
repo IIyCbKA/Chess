@@ -20,6 +20,17 @@ namespace Colors {
 namespace BoardConstants {
   inline constexpr size_t SQUARES_ROWS_COLS = 8;
   inline constexpr size_t PAWN_ROWS_MOVE_FOR_EN_PASSANT = 2;
+
+  inline constexpr size_t CASTLING_FIRST_OFFSET = 1;
+  inline constexpr size_t CASTLING_SECOND_OFFSET = 2;
+  inline constexpr size_t CASTLING_THIRD_OFFSET = 3;
+  inline constexpr size_t KINGSIDE_CASTLING_ROOK_OFFSET = 3;
+  inline constexpr size_t QUEENSIDE_CASTLING_ROOK_OFFSET = 4;
+
+  inline constexpr size_t DEFAULT_KINGSIDE_ROOK_COL = 7;
+  inline constexpr size_t DEFAULT_QUEENSIDE_ROOK_COL = 0;
+  inline constexpr size_t KINGSIDE_CASTLING_NEW_ROOK_COL = 5;
+  inline constexpr size_t QUEENSIDE_CASTLING_NEW_ROOK_COL = 3;
 }
 
 namespace PiecesConstants {
@@ -94,6 +105,10 @@ namespace ConstantsUI {
     WHITE_MOVE = 1,
     BLACK_MOVE = 2,
   };
+
+  inline const auto HISTORY_DEFAULT_MASK = QStringLiteral("%1%2%3%4");
+  inline const auto HISTORY_KINGSIDE_CASTLING = QStringLiteral("O-O");
+  inline const auto HISTORY_QUEENSIDE_CASTLING = QStringLiteral("O-O-O");
 }
 
 #endif

@@ -87,9 +87,9 @@ void BoardModel::clearEnPassant() {
 }
 
 
-void BoardModel::movePiece(const Position to) {
-  const Position from = this->selectedPosition.value();
+void BoardModel::movePiece(const Position from, const Position to) {
   removePiece(this->board[from.row][from.col]->getCapturePosition(from, to));
+  tryCastling(to);
   this->board[to.row][to.col] = std::move(this->board[from.row][from.col]);
   this->board[to.row][to.col]->move();
   clearEnPassant();
@@ -138,4 +138,36 @@ bool BoardModel::isSamePosition(const Position pos) const {
     this->selectedPosition.has_value() &&
     this->selectedPosition->row == pos.row &&
     this->selectedPosition->col == pos.col;
+}
+
+
+bool BoardModel::isCastling(const Position to) const {
+  const auto* movingPiece =
+    this->board[this->selectedPosition->row][this->selectedPosition->col].get();
+
+  return
+    movingPiece->getType() == PiecesConstants::PIECE_TYPES::KING &&
+    std::abs(
+      static_cast<int>(to.col) - static_cast<int>(this->selectedPosition->col)
+    ) == 2;
+}
+
+
+void BoardModel::tryCastling(const Position to) {
+  if (isCastling(to)) {
+    const Position from = this->selectedPosition.value();
+    Position rookFrom, rookTo;
+    rookFrom.row = to.row;
+    rookTo.row = to.row;
+
+    if (to.col > from.col) {
+      rookFrom.col = BoardConstants::DEFAULT_KINGSIDE_ROOK_COL;
+      rookTo.col = BoardConstants::KINGSIDE_CASTLING_NEW_ROOK_COL;
+    } else {
+      rookFrom.col = BoardConstants::DEFAULT_QUEENSIDE_ROOK_COL;
+      rookTo.col = BoardConstants::QUEENSIDE_CASTLING_NEW_ROOK_COL;
+    }
+
+    emit onMoveRook(rookFrom, rookTo);
+  }
 }

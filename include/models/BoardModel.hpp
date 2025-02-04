@@ -21,15 +21,17 @@ class BoardModel : public QObject {
   void setupPieces();
   void cleanBoard();
   static void clearEnPassant();
+  void getPossibleMoves(Position from);
+  void removePiece(Position from);
+  void tryCastling(Position to);
+  [[nodiscard]] bool isCastling(Position to) const;
 
 public:
   BoardModel() = default;
   void boardReset();
-  void removePiece(Position from);
-  void movePiece(Position to);
+  void movePiece(Position from, Position to);
   void deselectSquare();
   void selectSquare(Position to);
-  void getPossibleMoves(Position from);
 
   [[nodiscard]] Position getSelectedPosition() const;
   [[nodiscard]] Piece* getPiece(Position piecePosition) const;
@@ -44,6 +46,7 @@ public:
 signals:
   void onBoardReset();
   void onPieceRemoved(Position from);
+  void onMoveRook(Position rookFrom, Position rookTo);
 };
 
 #endif //BOARDMODEL_HPP

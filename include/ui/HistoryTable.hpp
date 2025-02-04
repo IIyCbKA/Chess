@@ -1,6 +1,7 @@
 #ifndef HISTORYTABLE_HPP
 #define HISTORYTABLE_HPP
 
+#include <utils/moveLog.hpp>
 #include <utils/position.hpp>
 
 #include <QHeaderView>
@@ -15,9 +16,9 @@ class HistoryTable : public QTableView {
 public:
   explicit HistoryTable(QWidget *parent = nullptr);
 
-  static QString moveToStr(Position from, Position to);
-  void addWhiteMove(Position from, Position to);
-  void addBlackMove(Position from, Position to);
+  static QString moveToStr(const MoveLog &log);
+  void addWhiteMove(const MoveLog &log);
+  void addBlackMove(const MoveLog &log);
   void updateHighlighted(QStandardItem* newItem);
   void cleanTable();
 

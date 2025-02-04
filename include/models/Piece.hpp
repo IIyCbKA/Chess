@@ -24,6 +24,7 @@ public:
   static bool isWithinBounds(Position curPosition, int moveRow, int moveCol);
   [[nodiscard]] PiecesConstants::PIECE_COLORS getColor() const { return this->color; }
   [[nodiscard]] PiecesConstants::PIECE_TYPES getType() const { return this->type; }
+  [[nodiscard]] bool getIsMoved() const { return this->isMoved; }
   virtual Position getCapturePosition(const Position from, const Position to) { return to; }
   virtual std::vector<Position> getPossibleMoves(
     const Board& board, Position curPosition

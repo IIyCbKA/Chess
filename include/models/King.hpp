@@ -6,6 +6,17 @@
 #include <constants.hpp>
 
 class King : public Piece {
+  void getDefaultMoves(
+    const Board& board, Position curPosition, std::vector<Position>& moves
+  ) const;
+  void canKingSideCastling(
+    const Board& board, Position curPosition, std::vector<Position>& moves
+  ) const;
+  void canQueenSideCastling(
+    const Board& board, Position curPosition, std::vector<Position>& moves
+  ) const;
+  [[nodiscard]] bool isValidRook(const Board& board, Position pos) const;
+
 public:
   explicit King(const PiecesConstants::PIECE_COLORS color) :
     Piece(color, PiecesConstants::KING) {}

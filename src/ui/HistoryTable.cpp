@@ -44,16 +44,24 @@ void HistoryTable::updateHighlighted(QStandardItem* newItem) {
 }
 
 
-QString HistoryTable::moveToStr(const Position from, const Position to) {
-  return QString("%1%2%3%4")
-    .arg(getChar(from.col))
-    .arg(BoardConstants::SQUARES_ROWS_COLS - from.row)
-    .arg(getChar(to.col))
-    .arg(BoardConstants::SQUARES_ROWS_COLS - to.row);
+QString HistoryTable::moveToStr(const MoveLog &log) {
+  QString result;
+  if (log.isCastling) {
+    if (log.isKingSide) result = ConstantsUI::HISTORY_KINGSIDE_CASTLING;
+    else result = ConstantsUI::HISTORY_QUEENSIDE_CASTLING;
+  } else {
+    result = QString(ConstantsUI::HISTORY_DEFAULT_MASK)
+    .arg(getChar(log.from.col))
+    .arg(BoardConstants::SQUARES_ROWS_COLS - log.from.row)
+    .arg(getChar(log.to.col))
+    .arg(BoardConstants::SQUARES_ROWS_COLS - log.to.row);
+  }
+
+  return result;
 }
 
 
-void HistoryTable::addWhiteMove(const Position from, const Position to) {
+void HistoryTable::addWhiteMove(const MoveLog &log) {
   using namespace ConstantsUI;
 
   const int row = this->model->rowCount();
@@ -63,19 +71,19 @@ void HistoryTable::addWhiteMove(const Position from, const Position to) {
   itemNumber->setTextAlignment(Qt::AlignCenter);
   this->model->setItem(row, HISTORY_TABLE_COLS::NUMBER_OF_PAIR, itemNumber);
 
-  auto *itemWhite = new QStandardItem(moveToStr(from, to));
+  auto *itemWhite = new QStandardItem(moveToStr(log));
   itemWhite->setTextAlignment(Qt::AlignCenter);
   this->model->setItem(row, HISTORY_TABLE_COLS::WHITE_MOVE, itemWhite);
   updateHighlighted(itemWhite);
 }
 
 
-void HistoryTable::addBlackMove(const Position from, const Position to) {
+void HistoryTable::addBlackMove(const MoveLog &log) {
   using namespace ConstantsUI;
 
   const int row = this->model->rowCount() - 1;
 
-  auto *itemBlack = new QStandardItem(moveToStr(from, to));
+  auto *itemBlack = new QStandardItem(moveToStr(log));
   itemBlack->setTextAlignment(Qt::AlignCenter);
   this->model->setItem(row, HISTORY_TABLE_COLS::BLACK_MOVE, itemBlack);
   updateHighlighted(itemBlack);

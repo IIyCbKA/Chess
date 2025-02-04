@@ -47,10 +47,10 @@ void MainWindow::onRestartGameClicked() const {
 }
 
 
-void MainWindow::onMoveMade(const Position from, const Position to) const {
+void MainWindow::onMoveMade(const MoveLog &log) const {
   if (GameState::instance().getActiveColor() == PiecesConstants::PIECE_COLORS::WHITE)
-    this->ui.tableView->addWhiteMove(from, to);
-  else this->ui.tableView->addBlackMove(from, to);
+    this->ui.tableView->addWhiteMove(log);
+  else this->ui.tableView->addBlackMove(log);
 
   GameState::instance().moveMade();
   updateMoveIndicator();
