@@ -9,30 +9,48 @@
 
 void BoardModel::setupPieces() {
   for (size_t col = 0; col < BoardConstants::SQUARES_ROWS_COLS; ++col) {
-    this->board[6][col] = std::make_unique<Pawn>(Pawn(PiecesConstants::PIECE_COLORS::WHITE));
+    this->board[6][col] = createPiece(
+      PiecesConstants::PIECE_TYPES::PAWN, PiecesConstants::PIECE_COLORS::WHITE);
   }
 
-  this->board[7][0] = std::make_unique<Rook>(Rook(PiecesConstants::PIECE_COLORS::WHITE));
-  this->board[7][1] = std::make_unique<Knight>(Knight(PiecesConstants::PIECE_COLORS::WHITE));
-  this->board[7][2] = std::make_unique<Bishop>(Bishop(PiecesConstants::PIECE_COLORS::WHITE));
-  this->board[7][3] = std::make_unique<Queen>(Queen(PiecesConstants::PIECE_COLORS::WHITE));
-  this->board[7][4] = std::make_unique<King>(King(PiecesConstants::PIECE_COLORS::WHITE));
-  this->board[7][5] = std::make_unique<Bishop>(Bishop(PiecesConstants::PIECE_COLORS::WHITE));
-  this->board[7][6] = std::make_unique<Knight>(Knight(PiecesConstants::PIECE_COLORS::WHITE));
-  this->board[7][7] = std::make_unique<Rook>(Rook(PiecesConstants::PIECE_COLORS::WHITE));
+  this->board[7][0] = createPiece(
+    PiecesConstants::PIECE_TYPES::ROOK, PiecesConstants::PIECE_COLORS::WHITE);
+  this->board[7][1] = createPiece(
+    PiecesConstants::PIECE_TYPES::KNIGHT, PiecesConstants::PIECE_COLORS::WHITE);
+  this->board[7][2] = createPiece(
+    PiecesConstants::PIECE_TYPES::BISHOP, PiecesConstants::PIECE_COLORS::WHITE);
+  this->board[7][3] = createPiece(
+    PiecesConstants::PIECE_TYPES::QUEEN, PiecesConstants::PIECE_COLORS::WHITE);
+  this->board[7][4] = createPiece(
+    PiecesConstants::PIECE_TYPES::KING, PiecesConstants::PIECE_COLORS::WHITE);
+  this->board[7][5] = createPiece(
+    PiecesConstants::PIECE_TYPES::BISHOP, PiecesConstants::PIECE_COLORS::WHITE);
+  this->board[7][6] = createPiece(
+    PiecesConstants::PIECE_TYPES::KNIGHT, PiecesConstants::PIECE_COLORS::WHITE);
+  this->board[7][7] = createPiece(
+    PiecesConstants::PIECE_TYPES::ROOK, PiecesConstants::PIECE_COLORS::WHITE);
 
   for (size_t col = 0; col < BoardConstants::SQUARES_ROWS_COLS; ++col) {
-    this->board[1][col] = std::make_unique<Pawn>(Pawn(PiecesConstants::PIECE_COLORS::BLACK));
+    this->board[1][col] = createPiece(
+      PiecesConstants::PIECE_TYPES::PAWN, PiecesConstants::PIECE_COLORS::BLACK);
   }
 
-  this->board[0][0] = std::make_unique<Rook>(Rook(PiecesConstants::PIECE_COLORS::BLACK));
-  this->board[0][1] = std::make_unique<Knight>(Knight(PiecesConstants::PIECE_COLORS::BLACK));
-  this->board[0][2] = std::make_unique<Bishop>(Bishop(PiecesConstants::PIECE_COLORS::BLACK));
-  this->board[0][3] = std::make_unique<Queen>(Queen(PiecesConstants::PIECE_COLORS::BLACK));
-  this->board[0][4] = std::make_unique<King>(King(PiecesConstants::PIECE_COLORS::BLACK));
-  this->board[0][5] = std::make_unique<Bishop>(Bishop(PiecesConstants::PIECE_COLORS::BLACK));
-  this->board[0][6] = std::make_unique<Knight>(Knight(PiecesConstants::PIECE_COLORS::BLACK));
-  this->board[0][7] = std::make_unique<Rook>(Rook(PiecesConstants::PIECE_COLORS::BLACK));
+  this->board[0][0] = createPiece(
+    PiecesConstants::PIECE_TYPES::ROOK, PiecesConstants::PIECE_COLORS::BLACK);
+  this->board[0][1] = createPiece(
+    PiecesConstants::PIECE_TYPES::KNIGHT, PiecesConstants::PIECE_COLORS::BLACK);
+  this->board[0][2] = createPiece(
+    PiecesConstants::PIECE_TYPES::BISHOP, PiecesConstants::PIECE_COLORS::BLACK);
+  this->board[0][3] = createPiece(
+    PiecesConstants::PIECE_TYPES::QUEEN, PiecesConstants::PIECE_COLORS::BLACK);
+  this->board[0][4] = createPiece(
+    PiecesConstants::PIECE_TYPES::KING, PiecesConstants::PIECE_COLORS::BLACK);
+  this->board[0][5] = createPiece(
+    PiecesConstants::PIECE_TYPES::BISHOP, PiecesConstants::PIECE_COLORS::BLACK);
+  this->board[0][6] = createPiece(
+    PiecesConstants::PIECE_TYPES::KNIGHT, PiecesConstants::PIECE_COLORS::BLACK);
+  this->board[0][7] = createPiece(
+    PiecesConstants::PIECE_TYPES::ROOK, PiecesConstants::PIECE_COLORS::BLACK);
 }
 
 
@@ -92,6 +110,7 @@ void BoardModel::movePiece(const Position from, const Position to) {
   tryCastling(to);
   this->board[to.row][to.col] = std::move(this->board[from.row][from.col]);
   this->board[to.row][to.col]->move();
+  tryPawnPromotion(to);
   clearEnPassant();
 }
 
@@ -169,5 +188,59 @@ void BoardModel::tryCastling(const Position to) {
     }
 
     emit onMoveRook(rookFrom, rookTo);
+  }
+}
+
+
+bool BoardModel::isPawnPromotion(const Position pos) const {
+  const auto* movingPiece = this->board[pos.row][pos.col].get();
+
+  return
+    movingPiece->getType() == PiecesConstants::PIECE_TYPES::PAWN &&
+    (pos.row == 0 || pos.row == BoardConstants::SQUARES_ROWS_COLS - 1);
+}
+
+
+void BoardModel::tryPawnPromotion(const Position pos) {
+  if (isPawnPromotion(pos)) {
+    emit onPawnPromotion(pos, this->board[pos.row][pos.col]->getColor());
+  }
+}
+
+
+void BoardModel::changePawnType(
+  const Position pos,
+  const PiecesConstants::PIECE_TYPES newType,
+  const PiecesConstants::PIECE_COLORS color
+) {
+  if (
+    this->board[pos.row][pos.col] &&
+    this->board[pos.row][pos.col]->getType() == PiecesConstants::PIECE_TYPES::PAWN
+  ) {
+    this->board[pos.row][pos.col].reset();
+    this->board[pos.row][pos.col] = createPiece(newType, color);
+  }
+}
+
+
+std::unique_ptr<Piece> BoardModel::createPiece(
+  const PiecesConstants::PIECE_TYPES type,
+  const PiecesConstants::PIECE_COLORS color
+) {
+  switch (type) {
+    case PiecesConstants::PIECE_TYPES::PAWN:
+      return std::make_unique<Pawn>(Pawn(color));
+    case PiecesConstants::PIECE_TYPES::QUEEN:
+      return std::make_unique<Queen>(Queen(color));
+    case PiecesConstants::PIECE_TYPES::ROOK:
+     return std::make_unique<Rook>(Rook(color));
+    case PiecesConstants::PIECE_TYPES::KNIGHT:
+      return std::make_unique<Knight>(Knight(color));
+    case PiecesConstants::PIECE_TYPES::BISHOP:
+      return std::make_unique<Bishop>(Bishop(color));
+    case PiecesConstants::PIECE_TYPES::KING:
+      return std::make_unique<King>(King(color));
+    default:
+      return std::make_unique<Queen>(Queen(color));
   }
 }

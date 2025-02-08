@@ -11,6 +11,10 @@ GameController::GameController(BoardModel* model, BoardView* view, QObject* pare
     this->model, &BoardModel::onMoveRook,
     this, &GameController::onCastlingMoveRook
   );
+  connect(
+    this->model, &BoardModel::onPawnPromotion,
+    this, &GameController::onPawnPromotion
+  );
 }
 
 
@@ -50,6 +54,11 @@ void GameController::movePieceEmit(const Position from, const Position to) {
     log.isKingSide = to.col > from.col;
   }
 
+  if (this->promotionPending.has_value()) {
+    log.promotionType = this->promotionPending.value();
+    this->promotionPending.reset();
+  }
+
   emit moveMade(log);
 }
 
@@ -77,4 +86,22 @@ void GameController::forceMovePiece(const Position from, const Position to) cons
 
 void GameController::onCastlingMoveRook(const Position from, const Position to) const {
   forceMovePiece(from, to);
+}
+
+
+void GameController::onPawnPromotion(
+  const Position pos,
+  const PiecesConstants::PIECE_COLORS color
+) {
+  emit pawnPromotion(pos, color);
+}
+
+
+void GameController::changePawnType(
+  const Position pos,
+  const PiecesConstants::PIECE_TYPES newType,
+  const PiecesConstants::PIECE_COLORS color
+) {
+  this->model->changePawnType(pos, newType, color);
+  this->promotionPending = newType;
 }

@@ -57,14 +57,19 @@ void BoardView::turningBoard() const {
 void BoardView::setupPieces() const {
   for (size_t row = 0; row < BoardConstants::SQUARES_ROWS_COLS; ++row) {
     for (size_t col = 0; col < BoardConstants::SQUARES_ROWS_COLS; ++col) {
-      if (const auto piece = this->boardModel->getPiece({row, col})) {
-        this->board[row][col]->addIcon(
-          piece->getColor(),
-          piece->getType(),
-          this->squareSize
-        );
-      }
+      setupPieceByPos({row, col});
     }
+  }
+}
+
+
+void BoardView::setupPieceByPos(const Position pos) const {
+  if (const auto piece = this->boardModel->getPiece(pos)) {
+    this->board[pos.row][pos.col]->addIcon(
+      piece->getColor(),
+      piece->getType(),
+      this->squareSize
+    );
   }
 }
 
@@ -113,14 +118,8 @@ void BoardView::removePiece(const Position from) const {
 
 
 void BoardView::movePiece(const Position from, const Position to) const {
-  this->board[from.row][from.col]->clearIcon();
-  if (const auto piece = this->boardModel->getPiece(to)) {
-    this->board[to.row][to.col]->addIcon(
-      piece->getColor(),
-      piece->getType(),
-      this->squareSize
-    );
-  }
+  removePiece(from);
+  setupPieceByPos(to);
 }
 
 

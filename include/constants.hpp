@@ -82,6 +82,36 @@ namespace PiecesConstants {
   };
 }
 
+namespace ResourcesConstants {
+  const QHash<
+    PiecesConstants::PIECE_COLORS,
+    QHash<PiecesConstants::PIECE_TYPES, QString>
+  > PIECES_PATHS = {
+    {
+      PiecesConstants::PIECE_COLORS::WHITE,
+      {
+        {PiecesConstants::PIECE_TYPES::KING,   QStringLiteral(":images/wKing.svg")},
+        {PiecesConstants::PIECE_TYPES::QUEEN,  QStringLiteral(":images/wQueen.svg")},
+        {PiecesConstants::PIECE_TYPES::ROOK,   QStringLiteral(":images/wRook.svg")},
+        {PiecesConstants::PIECE_TYPES::KNIGHT, QStringLiteral(":images/wKnight.svg")},
+        {PiecesConstants::PIECE_TYPES::BISHOP, QStringLiteral(":images/wBishop.svg")},
+        {PiecesConstants::PIECE_TYPES::PAWN,   QStringLiteral(":images/wPawn.svg")},
+      },
+    },
+    {
+      PiecesConstants::PIECE_COLORS::BLACK,
+      {
+        {PiecesConstants::PIECE_TYPES::KING,   QStringLiteral(":images/bKing.svg")},
+        {PiecesConstants::PIECE_TYPES::QUEEN,  QStringLiteral(":images/bQueen.svg")},
+        {PiecesConstants::PIECE_TYPES::ROOK,   QStringLiteral(":images/bRook.svg")},
+        {PiecesConstants::PIECE_TYPES::KNIGHT, QStringLiteral(":images/bKnight.svg")},
+        {PiecesConstants::PIECE_TYPES::BISHOP, QStringLiteral(":images/bBishop.svg")},
+        {PiecesConstants::PIECE_TYPES::PAWN,   QStringLiteral(":images/bPawn.svg")},
+      },
+    },
+  };
+}
+
 namespace GameStateConstants {
   enum GAME_STATUS {
     ACTIVE,
@@ -109,6 +139,14 @@ namespace ConstantsUI {
   inline const auto HISTORY_DEFAULT_MASK = QStringLiteral("%1%2%3%4");
   inline const auto HISTORY_KINGSIDE_CASTLING = QStringLiteral("O-O");
   inline const auto HISTORY_QUEENSIDE_CASTLING = QStringLiteral("O-O-O");
+
+  inline const auto HISTORY_PROMOTION_TO_QUEEN  = QStringLiteral("=Q");
+  inline const auto HISTORY_PROMOTION_TO_ROOK   = QStringLiteral("=R");
+  inline const auto HISTORY_PROMOTION_TO_KNIGHT = QStringLiteral("=N");
+  inline const auto HISTORY_PROMOTION_TO_BISHOP = QStringLiteral("=B");
+
+  inline constexpr size_t DIALOG_BTN_ICON_WIDTH = 80;
+  inline constexpr size_t DIALOG_BTN_ICON_HEIGHT = 80;
 }
 
 #endif

@@ -18,13 +18,20 @@ class BoardModel : public QObject {
   std::optional<Position> selectedPosition;
   std::vector<Position> selectedCanMove;
 
+  static void clearEnPassant();
+  static std::unique_ptr<Piece> createPiece(
+    PiecesConstants::PIECE_TYPES type,
+    PiecesConstants::PIECE_COLORS color
+  );
+
   void setupPieces();
   void cleanBoard();
-  static void clearEnPassant();
   void getPossibleMoves(Position from);
   void removePiece(Position from);
   void tryCastling(Position to);
+  void tryPawnPromotion(Position pos);
   [[nodiscard]] bool isCastling(Position to) const;
+  [[nodiscard]] bool isPawnPromotion(Position pos) const;
 
 public:
   BoardModel() = default;
@@ -32,6 +39,11 @@ public:
   void movePiece(Position from, Position to);
   void deselectSquare();
   void selectSquare(Position to);
+  void changePawnType(
+    Position pos,
+    PiecesConstants::PIECE_TYPES newType,
+    PiecesConstants::PIECE_COLORS color
+  );
 
   [[nodiscard]] Position getSelectedPosition() const;
   [[nodiscard]] Piece* getPiece(Position piecePosition) const;
@@ -47,6 +59,7 @@ signals:
   void onBoardReset();
   void onPieceRemoved(Position from);
   void onMoveRook(Position rookFrom, Position rookTo);
+  void onPawnPromotion(Position pos, PiecesConstants::PIECE_COLORS color);
 };
 
 #endif //BOARDMODEL_HPP

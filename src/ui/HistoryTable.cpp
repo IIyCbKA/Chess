@@ -55,6 +55,10 @@ QString HistoryTable::moveToStr(const MoveLog &log) {
     .arg(BoardConstants::SQUARES_ROWS_COLS - log.from.row)
     .arg(getChar(log.to.col))
     .arg(BoardConstants::SQUARES_ROWS_COLS - log.to.row);
+
+    if (log.promotionType.has_value()) {
+      result += getPieceTypeInStr(log.promotionType.value());
+    }
   }
 
   return result;
@@ -93,4 +97,20 @@ void HistoryTable::addBlackMove(const MoveLog &log) {
 void HistoryTable::cleanTable() {
   this->model->setRowCount(0);
   this->highlightedItem = nullptr;
+}
+
+
+QString HistoryTable::getPieceTypeInStr(const PiecesConstants::PIECE_TYPES type) {
+  switch (type) {
+    case PiecesConstants::PIECE_TYPES::QUEEN:
+      return ConstantsUI::HISTORY_PROMOTION_TO_QUEEN;
+    case PiecesConstants::PIECE_TYPES::ROOK:
+      return ConstantsUI::HISTORY_PROMOTION_TO_ROOK;
+    case PiecesConstants::PIECE_TYPES::KNIGHT:
+      return ConstantsUI::HISTORY_PROMOTION_TO_KNIGHT;
+    case PiecesConstants::PIECE_TYPES::BISHOP:
+      return ConstantsUI::HISTORY_PROMOTION_TO_BISHOP;
+    default:
+      return ConstantsUI::HISTORY_PROMOTION_TO_QUEEN;
+  }
 }

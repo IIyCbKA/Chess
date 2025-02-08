@@ -21,6 +21,7 @@ class BoardView : public QGraphicsView {
 
   void resizeEvent(QResizeEvent *event) override;
   void setupPieces() const;
+  void setupPieceByPos(Position pos) const;
   void cleanBoard() const;
 
 public:

@@ -1,5 +1,5 @@
 #include <ui/MainWindow.hpp>
-#include <constants.hpp>
+#include <ui/PromotionDialog.hpp>
 #include <GameState.hpp>
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui() {
@@ -21,6 +21,10 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui() {
   connect(
     this->controller, &GameController::moveMade,
     this, &MainWindow::onMoveMade
+  );
+  connect(
+    this->controller, &GameController::pawnPromotion,
+    this, &MainWindow::onPawnPromotion
   );
 }
 
@@ -64,4 +68,16 @@ void MainWindow::onModelBoardReset() const {
 
 void MainWindow::onPieceRemoved(const Position from) const {
   this->ui.chessBoardView->removePiece(from);
+}
+
+
+void MainWindow::onPawnPromotion(
+  const Position pos,
+  const PiecesConstants::PIECE_COLORS color
+) {
+  auto dialog = PromotionDialog(color, this);
+  PiecesConstants::PIECE_TYPES chosenType = PiecesConstants::PIECE_TYPES::QUEEN;
+
+  if (dialog.exec() == QDialog::Accepted) chosenType = dialog.getSelectedType();
+  this->controller->changePawnType(pos, chosenType, color);
 }

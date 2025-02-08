@@ -13,6 +13,8 @@ class HistoryTable : public QTableView {
   QStandardItemModel *model = nullptr;
   QStandardItem *highlightedItem = nullptr;
 
+  static QString getPieceTypeInStr(PiecesConstants::PIECE_TYPES type);
+
 public:
   explicit HistoryTable(QWidget *parent = nullptr);
 

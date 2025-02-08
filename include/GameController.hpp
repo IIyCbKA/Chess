@@ -12,6 +12,7 @@ class GameController : public QObject {
   Q_OBJECT;
   BoardModel* model;
   BoardView* view;
+  std::optional<PiecesConstants::PIECE_TYPES> promotionPending;
 
   void selectSquare(Position pos) const;
   void deselectSquare() const;
@@ -21,14 +22,21 @@ class GameController : public QObject {
 
 public:
   explicit GameController(BoardModel* model, BoardView* view, QObject* parent = nullptr);
+  void changePawnType(
+    Position pos,
+    PiecesConstants::PIECE_TYPES newType,
+    PiecesConstants::PIECE_COLORS color
+  );
   ~GameController() override = default;
 
 signals:
   void moveMade(MoveLog log);
+  void pawnPromotion(Position pos, PiecesConstants::PIECE_COLORS color);
 
 private slots:
   void onSquareClicked(Position pos);
   void onCastlingMoveRook(Position from, Position to) const;
+  void onPawnPromotion(Position pos, PiecesConstants::PIECE_COLORS color);
 };
 
 #endif //GAMECONTROLLER_HPP

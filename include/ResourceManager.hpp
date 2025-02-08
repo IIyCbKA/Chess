@@ -4,6 +4,7 @@
 #include <constants.hpp>
 
 #include <QHash>
+#include <QObject>
 #include <QSvgRenderer>
 
 class ResourceManager {
@@ -26,8 +27,8 @@ public:
   ResourceManager& operator=(const ResourceManager&) = delete;
 
   ~ResourceManager() {
-    for(auto colorHash : this->renderers) {
-      for(auto renderer : colorHash) {
+    for(auto& colorHash : this->renderers) {
+      for(auto& renderer : colorHash) {
         delete renderer;
       }
     }

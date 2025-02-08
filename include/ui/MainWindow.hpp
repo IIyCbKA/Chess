@@ -4,6 +4,7 @@
 #include <ui/ui_App.hpp>
 #include <utils/moveLog.hpp>
 #include <utils/position.hpp>
+#include <constants.hpp>
 #include <GameController.hpp>
 
 class MainWindow : public QMainWindow {
@@ -26,6 +27,7 @@ private slots:
   void onMoveMade(const MoveLog &log) const;
   void onModelBoardReset() const;
   void onPieceRemoved(Position from) const;
+  void onPawnPromotion(Position pos, PiecesConstants::PIECE_COLORS color);
 };
 
 #endif

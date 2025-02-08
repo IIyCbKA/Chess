@@ -1,5 +1,7 @@
 #include <ResourceManager.hpp>
 
+#include <array>
+
 ResourceManager& ResourceManager::instance() {
   static ResourceManager instance;
 
@@ -8,30 +10,27 @@ ResourceManager& ResourceManager::instance() {
 
 
 ResourceManager::ResourceManager() {
-  this->renderers[PiecesConstants::PIECE_COLORS::WHITE][PiecesConstants::PIECE_TYPES::PAWN] =
-    new QSvgRenderer(QString(":/images/wPawn.svg"));
-  this->renderers[PiecesConstants::PIECE_COLORS::BLACK][PiecesConstants::PIECE_TYPES::PAWN] =
-    new QSvgRenderer(QString(":/images/bPawn.svg"));
-  this->renderers[PiecesConstants::PIECE_COLORS::WHITE][PiecesConstants::PIECE_TYPES::KING] =
-    new QSvgRenderer(QString(":/images/wKing.svg"));
-  this->renderers[PiecesConstants::PIECE_COLORS::BLACK][PiecesConstants::PIECE_TYPES::KING] =
-    new QSvgRenderer(QString(":/images/bKing.svg"));
-  this->renderers[PiecesConstants::PIECE_COLORS::WHITE][PiecesConstants::PIECE_TYPES::QUEEN] =
-    new QSvgRenderer(QString(":/images/wQueen.svg"));
-  this->renderers[PiecesConstants::PIECE_COLORS::BLACK][PiecesConstants::PIECE_TYPES::QUEEN] =
-    new QSvgRenderer(QString(":/images/bQueen.svg"));
-  this->renderers[PiecesConstants::PIECE_COLORS::WHITE][PiecesConstants::PIECE_TYPES::ROOK] =
-    new QSvgRenderer(QString(":/images/wRook.svg"));
-  this->renderers[PiecesConstants::PIECE_COLORS::BLACK][PiecesConstants::PIECE_TYPES::ROOK] =
-    new QSvgRenderer(QString(":/images/bRook.svg"));
-  this->renderers[PiecesConstants::PIECE_COLORS::WHITE][PiecesConstants::PIECE_TYPES::BISHOP] =
-    new QSvgRenderer(QString(":/images/wBishop.svg"));
-  this->renderers[PiecesConstants::PIECE_COLORS::BLACK][PiecesConstants::PIECE_TYPES::BISHOP] =
-    new QSvgRenderer(QString(":/images/bBishop.svg"));
-  this->renderers[PiecesConstants::PIECE_COLORS::WHITE][PiecesConstants::PIECE_TYPES::KNIGHT] =
-    new QSvgRenderer(QString(":/images/wKnight.svg"));
-  this->renderers[PiecesConstants::PIECE_COLORS::BLACK][PiecesConstants::PIECE_TYPES::KNIGHT] =
-    new QSvgRenderer(QString(":/images/bKnight.svg"));
+  constexpr std::array colors = {
+    PiecesConstants::PIECE_COLORS::WHITE,
+    PiecesConstants::PIECE_COLORS::BLACK
+  };
+
+  constexpr std::array types = {
+    PiecesConstants::PIECE_TYPES::PAWN,
+    PiecesConstants::PIECE_TYPES::KING,
+    PiecesConstants::PIECE_TYPES::QUEEN,
+    PiecesConstants::PIECE_TYPES::ROOK,
+    PiecesConstants::PIECE_TYPES::BISHOP,
+    PiecesConstants::PIECE_TYPES::KNIGHT
+  };
+
+  for (auto color : colors) {
+    for (auto type : types) {
+      this->renderers[color][type] = new QSvgRenderer(
+        ResourcesConstants::PIECES_PATHS[color][type]
+      );
+    }
+  }
 }
 
 
