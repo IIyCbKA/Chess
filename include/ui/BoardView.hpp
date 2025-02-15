@@ -3,6 +3,7 @@
 
 #include <models/BoardModel.hpp>
 #include <ui/SquareItem.hpp>
+#include <utils/highlightFlags.hpp>
 #include <constants.hpp>
 
 #include <array>
@@ -33,9 +34,10 @@ public:
   void boardReset() const;
   void highlightSquare(Position pos) const;
   void showPossibleMoves(const std::vector<Position>& moves) const;
-  void clearHighlights() const;
+  void clearHighlights(HighlightFlags flags) const;
   void removePiece(Position from) const;
   void movePiece(Position from, Position to) const;
+  void highlightCheckSquare(Position pos) const;
 
 signals:
   void squareClicked(Position pos);

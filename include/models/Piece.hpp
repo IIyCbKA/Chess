@@ -4,10 +4,17 @@
 #include <utils/position.hpp>
 #include <constants.hpp>
 
+#include <bitset>
+
 class Piece;
 
 using Board = std::array<
   std::array<std::unique_ptr<Piece>, BoardConstants::SQUARES_ROWS_COLS>,
+  BoardConstants::SQUARES_ROWS_COLS
+>;
+
+using AttackMap = std::array<
+  std::bitset<BoardConstants::SQUARES_ROWS_COLS>,
   BoardConstants::SQUARES_ROWS_COLS
 >;
 
@@ -27,7 +34,7 @@ public:
   [[nodiscard]] bool getIsMoved() const { return this->isMoved; }
   virtual Position getCapturePosition(const Position from, const Position to) { return to; }
   virtual std::vector<Position> getPossibleMoves(
-    const Board& board, Position curPosition
+    const Board& board, const AttackMap& attackMap, Position curPosition
   ) = 0;
 
   virtual ~Piece() = default;

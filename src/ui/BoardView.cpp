@@ -75,7 +75,7 @@ void BoardView::setupPieceByPos(const Position pos) const {
 
 
 void BoardView::cleanBoard() const {
-  clearHighlights();
+  clearHighlights({.isSelect = true, .isCheck = true});
   for (size_t row = 0; row < BoardConstants::SQUARES_ROWS_COLS; ++row) {
     for (size_t col = 0; col < BoardConstants::SQUARES_ROWS_COLS; ++col) {
       this->board[row][col]->clearIcon();
@@ -91,7 +91,7 @@ void BoardView::boardReset() const {
 
 
 void BoardView::highlightSquare(const Position pos) const {
-  this->board[pos.row][pos.col]->getRect()->selectSquare();
+  this->board[pos.row][pos.col]->getRect()->highlightSelectSquare();
 }
 
 
@@ -102,10 +102,11 @@ void BoardView::showPossibleMoves(const std::vector<Position>& moves) const {
 }
 
 
-void BoardView::clearHighlights() const {
+void BoardView::clearHighlights(const HighlightFlags flags) const {
   for (size_t row = 0; row < BoardConstants::SQUARES_ROWS_COLS; ++row) {
     for (size_t col = 0; col < BoardConstants::SQUARES_ROWS_COLS; ++col) {
-      this->board[row][col]->getRect()->deselectSquare();
+      if (flags.isSelect) this->board[row][col]->getRect()->unhighlightSelectSquare();
+      if (flags.isCheck) this->board[row][col]->getRect()->unhighlightCheckSquare();
       this->board[row][col]->hideCircle();
     }
   }
@@ -125,4 +126,9 @@ void BoardView::movePiece(const Position from, const Position to) const {
 
 void BoardView::onSquareClicked(const SquareItem* square) {
   emit squareClicked(square->getRealPos());
+}
+
+
+void BoardView::highlightCheckSquare(const Position pos) const {
+  this->board[pos.row][pos.col]->getRect()->highlightCheckSquare();
 }

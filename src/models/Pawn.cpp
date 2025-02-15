@@ -62,8 +62,7 @@ std::optional<EnPassant> Pawn::tryGetEnPassantCapture(const Position to) const {
   if (
     const auto enPassant = GameState::instance().getEnPassant();
     enPassant.has_value()
-    && enPassant->enPassantPosition.row == to.row
-    && enPassant->enPassantPosition.col == to.col
+    && enPassant->enPassantPosition == to
     && enPassant->pawnColor != this->color
   ) {
     return enPassant;
@@ -74,7 +73,7 @@ std::optional<EnPassant> Pawn::tryGetEnPassantCapture(const Position to) const {
 
 
 std::vector<Position> Pawn::getPossibleMoves(
-  const Board& board, const Position curPosition
+  const Board& board, const AttackMap& attackMap, const Position curPosition
 ) {
   std::vector<Position> moves;
   getDefaultMoves(board, curPosition, moves);

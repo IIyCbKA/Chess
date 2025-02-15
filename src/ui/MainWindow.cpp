@@ -26,6 +26,10 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui() {
     this->controller, &GameController::pawnPromotion,
     this, &MainWindow::onPawnPromotion
   );
+  connect(
+    this->controller, &GameController::endGame,
+    this, &MainWindow::onEndGame
+  );
 }
 
 
@@ -36,9 +40,20 @@ void MainWindow::init() const {
 
 
 void MainWindow::updateMoveIndicator() const {
-  if (GameState::instance().getActiveColor() == GameState::instance().getUserColor())
-    this->ui.moveIndicator->setText(ConstantsUI::YOUR_MOVE);
-  else this->ui.moveIndicator->setText(ConstantsUI::BOT_MOVE);
+  PiecesConstants::PIECE_COLORS activeColor = GameState::instance().getActiveColor();
+  if (GameState::instance().getGameStatus() == GameStateConstants::CHECKMATE) {
+    if (activeColor == PiecesConstants::PIECE_COLORS::WHITE)
+      this->ui.moveIndicator->setText(ConstantsUI::BLACK_CHECKMATED);
+    else this->ui.moveIndicator->setText(ConstantsUI::WHITE_CHECKMATED);
+  } else if (GameState::instance().getGameStatus() == GameStateConstants::STALEMATE) {
+    if (activeColor == PiecesConstants::PIECE_COLORS::WHITE)
+      this->ui.moveIndicator->setText(ConstantsUI::BLACK_STALEMATED);
+    else this->ui.moveIndicator->setText(ConstantsUI::WHITE_STALEMATED);
+  } else {
+    if (activeColor == GameState::instance().getUserColor())
+      this->ui.moveIndicator->setText(ConstantsUI::YOUR_MOVE);
+    else this->ui.moveIndicator->setText(ConstantsUI::BOT_MOVE);
+  }
 }
 
 
@@ -80,4 +95,9 @@ void MainWindow::onPawnPromotion(
 
   if (dialog.exec() == QDialog::Accepted) chosenType = dialog.getSelectedType();
   this->controller->changePawnType(pos, chosenType, color);
+}
+
+
+void MainWindow::onEndGame() const {
+  updateMoveIndicator();
 }

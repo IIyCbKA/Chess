@@ -79,6 +79,7 @@ void HistoryTable::addWhiteMove(const MoveLog &log) {
   itemWhite->setTextAlignment(Qt::AlignCenter);
   this->model->setItem(row, HISTORY_TABLE_COLS::WHITE_MOVE, itemWhite);
   updateHighlighted(itemWhite);
+  this->scrollToBottom();
 }
 
 
@@ -91,6 +92,7 @@ void HistoryTable::addBlackMove(const MoveLog &log) {
   itemBlack->setTextAlignment(Qt::AlignCenter);
   this->model->setItem(row, HISTORY_TABLE_COLS::BLACK_MOVE, itemBlack);
   updateHighlighted(itemBlack);
+  this->scrollToBottom();
 }
 
 

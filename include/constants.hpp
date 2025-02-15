@@ -12,7 +12,8 @@ QFont createFont(int pointSize);
 namespace Colors {
   inline constexpr QColor BEIGE{195, 166, 111};
   inline constexpr QColor BROWN{129, 90, 54};
-  inline constexpr QColor DEFAULT_YELLOW{204, 148, 44};
+  inline constexpr QColor YELLOW{204, 148, 44};
+  inline constexpr QColor PASTEL_RED{219, 88, 86};
   inline constexpr QColor TRANSPARENT_BLACK{26, 26, 26, 60};
   inline constexpr QColor MIDNIGHT{40, 57, 72};
 }
@@ -115,7 +116,8 @@ namespace ResourcesConstants {
 namespace GameStateConstants {
   enum GAME_STATUS {
     ACTIVE,
-    END,
+    CHECKMATE,
+    STALEMATE,
   };
 }
 
@@ -147,6 +149,11 @@ namespace ConstantsUI {
 
   inline constexpr size_t DIALOG_BTN_ICON_WIDTH = 80;
   inline constexpr size_t DIALOG_BTN_ICON_HEIGHT = 80;
+
+  inline const auto WHITE_CHECKMATED = QStringLiteral("White checkmated!");
+  inline const auto BLACK_CHECKMATED = QStringLiteral("Black checkmated!");
+  inline const auto WHITE_STALEMATED = QStringLiteral("White stalemated!");
+  inline const auto BLACK_STALEMATED = QStringLiteral("Black stalemated!");
 }
 
 #endif

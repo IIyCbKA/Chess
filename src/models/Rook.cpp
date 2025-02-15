@@ -2,7 +2,7 @@
 #include <constants.hpp>
 
 std::vector<Position> Rook::getPossibleMoves(
-  const Board& board, const Position curPosition
+  const Board& board, const AttackMap& attackMap, const Position curPosition
 ) {
   std::vector<Position> moves;
   for (const auto [deltaRow, deltaCol] : PiecesConstants::ROOK_MOVES) {

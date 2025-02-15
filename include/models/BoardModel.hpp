@@ -5,6 +5,7 @@
 #include <constants.hpp>
 
 #include <array>
+#include <bitset>
 #include <memory>
 #include <optional>
 #include <QObject>
@@ -17,6 +18,10 @@ class BoardModel : public QObject {
   > board;
   std::optional<Position> selectedPosition;
   std::vector<Position> selectedCanMove;
+  std::array<
+    std::bitset<BoardConstants::SQUARES_ROWS_COLS>,
+    BoardConstants::SQUARES_ROWS_COLS
+  > attackMap;
 
   static void clearEnPassant();
   static std::unique_ptr<Piece> createPiece(
@@ -26,12 +31,17 @@ class BoardModel : public QObject {
 
   void setupPieces();
   void cleanBoard();
-  void getPossibleMoves(Position from);
   void removePiece(Position from);
   void tryCastling(Position to);
   void tryPawnPromotion(Position pos);
+  void searchCheck();
+  void updateAttackMap(PiecesConstants::PIECE_COLORS color);
+  bool checkPossibleMove(Position from, Position to);
   [[nodiscard]] bool isCastling(Position to) const;
   [[nodiscard]] bool isPawnPromotion(Position pos) const;
+  [[nodiscard]] bool isPosUnderAttack(Position checkPos, PiecesConstants::PIECE_COLORS opponentColor) const;
+  [[nodiscard]] Position getKingPosByColor(PiecesConstants::PIECE_COLORS color) const;
+  [[nodiscard]] std::vector<Position> getPossibleMoves(Position pos) const;
 
 public:
   BoardModel() = default;
@@ -52,6 +62,7 @@ public:
   [[nodiscard]] bool trySelectSquare(Position to) const;
   [[nodiscard]] bool hasSelectedPiece() const;
   [[nodiscard]] bool isSamePosition(Position pos) const;
+  [[nodiscard]] bool isPlayerHavePossibleMove();
 
   ~BoardModel() override = default;
 
@@ -60,6 +71,7 @@ signals:
   void onPieceRemoved(Position from);
   void onMoveRook(Position rookFrom, Position rookTo);
   void onPawnPromotion(Position pos, PiecesConstants::PIECE_COLORS color);
+  void onCheck(Position pos, PiecesConstants::PIECE_COLORS color);
 };
 
 #endif //BOARDMODEL_HPP

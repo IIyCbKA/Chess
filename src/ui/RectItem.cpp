@@ -18,11 +18,30 @@ void RectItem::mousePressEvent(QGraphicsSceneMouseEvent* event) {
 }
 
 
-void RectItem::selectSquare() {
-  this->setBrush(QBrush(Colors::DEFAULT_YELLOW));
+void RectItem::highlightSelectSquare() {
+  this->isHighlightedSelect = true;
+  this->setBrush(QBrush(Colors::YELLOW));
 }
 
 
-void RectItem::deselectSquare() {
-  this->setBrush(this->squareParent->getBrush());
+void RectItem::highlightCheckSquare() {
+  this->isHighlightedCheck = true;
+  this->setBrush(QBrush(Colors::PASTEL_RED));
+}
+
+
+void RectItem::unhighlightSelectSquare() {
+  if (this->isHighlightedSelect) {
+    this->isHighlightedSelect = false;
+    if (this->isHighlightedCheck) this->setBrush(QBrush(Colors::PASTEL_RED));
+    else this->setBrush(this->squareParent->getBrush());
+  }
+}
+
+
+void RectItem::unhighlightCheckSquare() {
+  if (this->isHighlightedCheck) {
+    this->isHighlightedCheck = false;
+    this->setBrush(this->squareParent->getBrush());
+  }
 }

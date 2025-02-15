@@ -6,14 +6,22 @@
 #include <constants.hpp>
 
 class King : public Piece {
+  static bool isValidCastleSquare(
+    const Board& board,
+    const AttackMap& attackMap,
+    Position pos
+  );
+
   void getDefaultMoves(
     const Board& board, Position curPosition, std::vector<Position>& moves
   ) const;
   void canKingSideCastling(
-    const Board& board, Position curPosition, std::vector<Position>& moves
+    const Board& board, const AttackMap& attackMap,
+    Position pos, std::vector<Position>& moves
   ) const;
   void canQueenSideCastling(
-    const Board& board, Position curPosition, std::vector<Position>& moves
+    const Board& board, const AttackMap& attackMap,
+    Position pos, std::vector<Position>& moves
   ) const;
   [[nodiscard]] bool isValidRook(const Board& board, Position pos) const;
 
@@ -22,7 +30,7 @@ public:
     Piece(color, PiecesConstants::KING) {}
 
   std::vector<Position> getPossibleMoves(
-    const Board& board, Position curPosition
+    const Board& board, const AttackMap& attackMap, Position curPosition
   ) override;
 
   ~King() override = default;

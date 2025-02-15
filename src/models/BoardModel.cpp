@@ -59,6 +59,8 @@ void BoardModel::cleanBoard() {
     for (size_t col = 0; col < BoardConstants::SQUARES_ROWS_COLS; ++col) {
       this->board[row][col].reset();
     }
+
+    this->attackMap[row].reset();
   }
 }
 
@@ -68,11 +70,16 @@ Piece* BoardModel::getPiece(const Position piecePosition) const {
 }
 
 
-void BoardModel::getPossibleMoves(const Position from) {
-  if (this->board[from.row][from.col]) {
-    this->selectedCanMove =
-      this->board[from.row][from.col]->getPossibleMoves(this->board, from);
+std::vector<Position> BoardModel::getPossibleMoves(const Position pos) const {
+  if (this->board[pos.row][pos.col]) {
+    return this->board[pos.row][pos.col]->getPossibleMoves(
+      this->board,
+      this->attackMap,
+      pos
+    );
   }
+
+  return {};
 }
 
 
@@ -112,13 +119,15 @@ void BoardModel::movePiece(const Position from, const Position to) {
   this->board[to.row][to.col]->move();
   tryPawnPromotion(to);
   clearEnPassant();
+  updateAttackMap(GameState::instance().getActiveColor());
+  searchCheck();
 }
 
 
 bool BoardModel::isSelectedCanMoveTo(const Position to) const {
   return std::ranges::any_of(
     this->selectedCanMove,
-    [to](const auto& pos) { return pos.row == to.row && pos.col == to.col; }
+    [to](const auto& pos) { return pos == to; }
   );
 }
 
@@ -129,9 +138,31 @@ void BoardModel::deselectSquare() {
 }
 
 
+bool BoardModel::checkPossibleMove(const Position from, const Position to) {
+  auto originalTo = std::move(this->board[to.row][to.col]); // save piece
+  this->board[to.row][to.col] = std::move(this->board[from.row][from.col]); // move
+  const Position kingPos = getKingPosByColor(GameState::instance().getActiveColor());
+
+  // if pos is not under opponent attack - move is acceptable
+  const bool isAcceptable = !isPosUnderAttack(kingPos, GameState::instance().getInactiveColor());
+
+  this->board[from.row][from.col] = std::move(this->board[to.row][to.col]); // unmove
+  this->board[to.row][to.col] = std::move(originalTo); // return piece
+
+  return isAcceptable;
+}
+
+
 void BoardModel::selectSquare(const Position to) {
   this->selectedPosition = to;
-  getPossibleMoves(this->selectedPosition.value());
+  std::vector<Position> defaultPossibleMoves =
+    getPossibleMoves(this->selectedPosition.value());
+
+  for (const auto& possibleMove : defaultPossibleMoves) {
+    if (checkPossibleMove(this->selectedPosition.value(), possibleMove)) {
+      this->selectedCanMove.emplace_back(possibleMove);
+    }
+  }
 }
 
 
@@ -155,8 +186,7 @@ Position BoardModel::getSelectedPosition() const {
 bool BoardModel::isSamePosition(const Position pos) const {
   return
     this->selectedPosition.has_value() &&
-    this->selectedPosition->row == pos.row &&
-    this->selectedPosition->col == pos.col;
+    this->selectedPosition.value() == pos;
 }
 
 
@@ -243,4 +273,85 @@ std::unique_ptr<Piece> BoardModel::createPiece(
     default:
       return std::make_unique<Queen>(Queen(color));
   }
+}
+
+
+void BoardModel::searchCheck() {
+  PiecesConstants::PIECE_COLORS opponentColor = GameState::instance().getInactiveColor();
+  Position posOpponentKing = getKingPosByColor(opponentColor);
+  if (this->attackMap[posOpponentKing.row][posOpponentKing.col]) {
+    emit onCheck(posOpponentKing, opponentColor);
+  }
+}
+
+
+Position BoardModel::getKingPosByColor(const PiecesConstants::PIECE_COLORS color) const {
+  auto isDesiredKing = [this, color](const Position pos)->bool {
+    return
+      this->board[pos.row][pos.col]
+      && this->board[pos.row][pos.col]->getColor() == color
+      && this->board[pos.row][pos.col]->getType() == PiecesConstants::PIECE_TYPES::KING;
+  };
+
+  for (size_t row = 0; row < BoardConstants::SQUARES_ROWS_COLS; ++row) {
+    for (size_t col = 0; col < BoardConstants::SQUARES_ROWS_COLS; ++col) {
+      if (isDesiredKing({row, col})) return {row, col};
+    }
+  }
+
+  return {};
+}
+
+
+void BoardModel::updateAttackMap(const PiecesConstants::PIECE_COLORS color) {
+  for (size_t row = 0; row < BoardConstants::SQUARES_ROWS_COLS; ++row) {
+    this->attackMap[row].reset();
+  }
+
+  for (size_t row = 0; row < BoardConstants::SQUARES_ROWS_COLS; ++row) {
+    for (size_t col = 0; col < BoardConstants::SQUARES_ROWS_COLS; ++col) {
+      if (this->board[row][col] && this->board[row][col]->getColor() == color) {
+        std::vector<Position> canMove = getPossibleMoves({row, col});
+        for (const auto& position : canMove) {
+          this->attackMap[position.row][position.col] = true;
+        }
+      }
+    }
+  }
+}
+
+
+bool BoardModel::isPosUnderAttack(
+  const Position checkPos,
+  const PiecesConstants::PIECE_COLORS opponentColor
+) const {
+  for (size_t row = 0; row < BoardConstants::SQUARES_ROWS_COLS; ++row) {
+    for (size_t col = 0; col < BoardConstants::SQUARES_ROWS_COLS; ++col) {
+      if (this->board[row][col] && this->board[row][col]->getColor() == opponentColor) {
+        std::vector<Position> canMove = getPossibleMoves({row, col});
+        for (const auto& position : canMove) {
+          if (position == checkPos) return true;
+        }
+      }
+    }
+  }
+
+  return false;
+}
+
+
+bool BoardModel::isPlayerHavePossibleMove() {
+  const PiecesConstants::PIECE_COLORS color = GameState::instance().getActiveColor();
+  for (size_t row = 0; row < BoardConstants::SQUARES_ROWS_COLS; ++row) {
+    for (size_t col = 0; col < BoardConstants::SQUARES_ROWS_COLS; ++col) {
+      if (this->board[row][col] && this->board[row][col]->getColor() == color) {
+        std::vector<Position> canMove = getPossibleMoves({row, col});
+        for (const auto& position : canMove) {
+          if (checkPossibleMove({row, col}, position)) return true;
+        }
+      }
+    }
+  }
+
+  return false;
 }

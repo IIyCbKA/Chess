@@ -9,6 +9,10 @@ struct Position {
 
   size_t row;
   size_t col;
+
+  bool operator==(const Position& other) const {
+    return row == other.row && col == other.col;
+  }
 };
 
 #endif //POSITION_HPP

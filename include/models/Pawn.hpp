@@ -27,7 +27,7 @@ public:
     Piece(color, PiecesConstants::PAWN) {}
 
   std::vector<Position> getPossibleMoves(
-    const Board& board, Position curPosition
+    const Board& board, const AttackMap& attackMap, Position curPosition
   ) override;
   Position getCapturePosition(Position from, Position to) override;
 

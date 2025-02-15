@@ -28,6 +28,7 @@ private slots:
   void onModelBoardReset() const;
   void onPieceRemoved(Position from) const;
   void onPawnPromotion(Position pos, PiecesConstants::PIECE_COLORS color);
+  void onEndGame() const;
 };
 
 #endif
