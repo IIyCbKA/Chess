@@ -5,7 +5,7 @@
 #include <utils/position.hpp>
 #include <constants.hpp>
 
-class Knight : public Piece {
+class Knight final : public Piece {
 public:
   explicit Knight(const PiecesConstants::PIECE_COLORS color) :
     Piece(color, PiecesConstants::KNIGHT) {}

@@ -5,7 +5,7 @@
 #include <utils/position.hpp>
 #include <constants.hpp>
 
-class Rook : public Piece {
+class Rook final : public Piece {
 public:
   explicit Rook(const PiecesConstants::PIECE_COLORS color) :
     Piece(color, PiecesConstants::ROOK) {}

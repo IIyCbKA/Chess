@@ -10,7 +10,7 @@
 #include <QGraphicsSvgItem>
 #include <QPointer>
 
-class SquareItem : public QObject {
+class SquareItem final : public QObject {
   Q_OBJECT
 
   QPointer<QGraphicsSvgItem> svgIcon = nullptr;
@@ -39,7 +39,6 @@ public:
   );
   void clearIcon();
 
-  [[nodiscard]] QGraphicsSvgItem* getSvgIcon() const { return this->svgIcon; }
   [[nodiscard]] RectItem* getRect() const { return this->rect; }
   [[nodiscard]] Position getRealPos() const { return this->realPosition; }
   [[nodiscard]] QBrush getBrush() const { return this->brush; }

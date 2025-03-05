@@ -9,7 +9,7 @@
 #include <QPushButton>
 #include <QString>
 
-class PromotionDialog : public QDialog {
+class PromotionDialog final : public QDialog {
   Q_OBJECT
   Ui::PromotionDialog ui;
   PiecesConstants::PIECE_TYPES selectedType = PiecesConstants::PIECE_TYPES::QUEEN;
@@ -19,7 +19,7 @@ class PromotionDialog : public QDialog {
   void initPiecesIcons() const;
 
 public:
-  explicit PromotionDialog(PiecesConstants::PIECE_COLORS color, QWidget *parent = nullptr);
+  explicit PromotionDialog(PiecesConstants::PIECE_COLORS color, QWidget* parent = nullptr);
   [[nodiscard]] PiecesConstants::PIECE_TYPES getSelectedType() const { return this->selectedType; }
 
   ~PromotionDialog() override = default;

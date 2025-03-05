@@ -4,6 +4,7 @@
 struct HighlightFlags {
   bool isSelect = false;
   bool isCheck = false;
+  bool isLastMove = false;
 };
 
 #endif //HIGHLIGHTFLAGS_HPP

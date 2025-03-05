@@ -125,22 +125,7 @@ public:
         easyBotBtn->setObjectName("easyBotBtn");
         easyBotBtn->setMinimumSize(QSize(0, 40));
         easyBotBtn->setFont(ConstantsUI::FONT_TITLE);
-        easyBotBtn->setStyleSheet(QString::fromUtf8("QPushButton {\n"
-"    background-color: rgb(70, 66, 65);\n"
-"    outline: none;\n"
-"    border: none;\n"
-"	border-radius: 10px;\n"
-"}\n"
-"\n"
-"QPushButton:hover {\n"
-"	background-color: rgb(82, 78, 77);\n"
-"}\n"
-"\n"
-"QPushButton:pressed {\n"
-"	padding: 0;\n"
-"	background-color: rgb(63, 59, 58);\n"
-"}\n"
-""));
+        easyBotBtn->setStyleSheet(ConstantsUI::DEFAULT_DIFFICULTY_BTN_STYLESHEET);
 
         btnsFrameGridLayout->addWidget(easyBotBtn, 0, 0, 1, 1);
 
@@ -148,22 +133,7 @@ public:
         mediumBotBtn->setObjectName("mediumBotBtn");
         mediumBotBtn->setMinimumSize(QSize(0, 40));
         mediumBotBtn->setFont(ConstantsUI::FONT_TITLE);
-        mediumBotBtn->setStyleSheet(QString::fromUtf8("QPushButton {\n"
-"    background-color: rgb(70, 66, 65);\n"
-"    outline: none;\n"
-"    border: none;\n"
-"	border-radius: 10px;\n"
-"}\n"
-"\n"
-"QPushButton:hover {\n"
-"	background-color: rgb(82, 78, 77);\n"
-"}\n"
-"\n"
-"QPushButton:pressed {\n"
-"	padding: 0;\n"
-"	background-color: rgb(63, 59, 58);\n"
-"}\n"
-""));
+        mediumBotBtn->setStyleSheet(ConstantsUI::DEFAULT_DIFFICULTY_BTN_STYLESHEET);
 
         btnsFrameGridLayout->addWidget(mediumBotBtn, 0, 1, 1, 1);
 
@@ -171,22 +141,7 @@ public:
         hardBotBtn->setObjectName("hardBotBtn");
         hardBotBtn->setMinimumSize(QSize(0, 40));
         hardBotBtn->setFont(ConstantsUI::FONT_TITLE);
-        hardBotBtn->setStyleSheet(QString::fromUtf8("QPushButton {\n"
-"    background-color: rgb(70, 66, 65);\n"
-"    outline: none;\n"
-"    border: none;\n"
-"	border-radius: 10px;\n"
-"}\n"
-"\n"
-"QPushButton:hover {\n"
-"	background-color: rgb(82, 78, 77);\n"
-"}\n"
-"\n"
-"QPushButton:pressed {\n"
-"	padding: 0;\n"
-"	background-color: rgb(63, 59, 58);\n"
-"}\n"
-""));
+        hardBotBtn->setStyleSheet(ConstantsUI::DEFAULT_DIFFICULTY_BTN_STYLESHEET);
 
         btnsFrameGridLayout->addWidget(hardBotBtn, 0, 2, 1, 1);
 

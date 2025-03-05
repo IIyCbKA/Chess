@@ -1,7 +1,7 @@
 #include <ui/PromotionDialog.hpp>
 
 PromotionDialog::PromotionDialog(
-  const PiecesConstants::PIECE_COLORS color, QWidget *parent):
+  const PiecesConstants::PIECE_COLORS color, QWidget* parent):
   QDialog(parent), ui(), pieceColor(color)
 {
   this->ui.setupUi(this);

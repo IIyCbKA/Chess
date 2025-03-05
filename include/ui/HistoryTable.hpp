@@ -2,26 +2,24 @@
 #define HISTORYTABLE_HPP
 
 #include <utils/moveLog.hpp>
-#include <utils/position.hpp>
 
 #include <QHeaderView>
 #include <QStandardItemModel>
 #include <QString>
 #include <QTableView>
 
-class HistoryTable : public QTableView {
-  QStandardItemModel *model = nullptr;
-  QStandardItem *highlightedItem = nullptr;
+class HistoryTable final : public QTableView {
+  QStandardItemModel* model = nullptr;
+  QStandardItem* highlightedItem = nullptr;
 
-  static QString getPieceTypeInStr(PiecesConstants::PIECE_TYPES type);
+  static QString moveToStr(const MoveLog& log);
+  void updateHighlighted(QStandardItem* newItem);
 
 public:
-  explicit HistoryTable(QWidget *parent = nullptr);
+  explicit HistoryTable(QWidget* parent = nullptr);
 
-  static QString moveToStr(const MoveLog &log);
-  void addWhiteMove(const MoveLog &log);
-  void addBlackMove(const MoveLog &log);
-  void updateHighlighted(QStandardItem* newItem);
+  void addWhiteMove(const MoveLog& log);
+  void addBlackMove(const MoveLog& log);
   void cleanTable();
 
   ~HistoryTable() override = default;

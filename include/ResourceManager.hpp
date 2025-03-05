@@ -3,14 +3,13 @@
 
 #include <constants.hpp>
 
-#include <QHash>
-#include <QObject>
 #include <QSvgRenderer>
+#include <unordered_map>
 
 class ResourceManager {
-  QHash <
+  std::unordered_map <
     PiecesConstants::PIECE_COLORS,
-    QHash<PiecesConstants::PIECE_TYPES, QSvgRenderer*>
+    std::unordered_map<PiecesConstants::PIECE_TYPES, std::unique_ptr<QSvgRenderer>>
   > renderers;
 
   ResourceManager();
@@ -21,18 +20,12 @@ public:
   [[nodiscard]] QSvgRenderer* getRenderer(
     PiecesConstants::PIECE_COLORS color,
     PiecesConstants::PIECE_TYPES piece
-  ) const ;
+  ) const;
 
   ResourceManager(const ResourceManager&) = delete;
   ResourceManager& operator=(const ResourceManager&) = delete;
 
-  ~ResourceManager() {
-    for(auto& colorHash : this->renderers) {
-      for(auto& renderer : colorHash) {
-        delete renderer;
-      }
-    }
-  }
+  ~ResourceManager() = default;
 };
 
 #endif

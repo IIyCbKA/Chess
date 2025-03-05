@@ -26,7 +26,7 @@ ResourceManager::ResourceManager() {
 
   for (auto color : colors) {
     for (auto type : types) {
-      this->renderers[color][type] = new QSvgRenderer(
+      this->renderers[color][type] = std::make_unique<QSvgRenderer>(
         ResourcesConstants::PIECES_PATHS[color][type]
       );
     }
@@ -38,9 +38,9 @@ QSvgRenderer* ResourceManager::getRenderer(
   const PiecesConstants::PIECE_COLORS color,
   const PiecesConstants::PIECE_TYPES piece
 ) const {
-  if (this->renderers.contains(color) && this->renderers[color].contains(piece)) {
-    return this->renderers[color][piece];
-  }
+  const auto colorIter = this->renderers.find(color);
+  if (colorIter == this->renderers.end()) return nullptr;
 
-  return nullptr;
+  const auto pieceIter = colorIter->second.find(piece);
+  return pieceIter != colorIter->second.end() ? pieceIter->second.get() : nullptr;
 }

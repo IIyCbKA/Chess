@@ -2,21 +2,25 @@
 #include <ui/PromotionDialog.hpp>
 #include <GameState.hpp>
 
-MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui() {
+MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent), ui() {
   this->ui.setupUi(this);
-  this->boardModel = new BoardModel();
-  this->controller = new GameController(this->boardModel, this->ui.chessBoardView);
+  this->controller = new GameController(this->ui.chessBoardView);
+  tryUpdateDifficultyBtn(this->ui.easyBotBtn, StockfishConstants::EASY_DEPTH);
   connect(
     this->ui.restartGameBtn, &QPushButton::clicked,
     this, &MainWindow::onRestartGameClicked
   );
   connect(
-    this->boardModel, &BoardModel::onBoardReset,
-    this, &MainWindow::onModelBoardReset
+    this->ui.easyBotBtn, &QPushButton::clicked,
+    this, &MainWindow::onEasyBotBtnClicked
   );
   connect(
-    this->boardModel, &BoardModel::onPieceRemoved,
-    this, &MainWindow::onPieceRemoved
+    this->ui.mediumBotBtn, &QPushButton::clicked,
+    this, &MainWindow::onMediumBotBtnClicked
+  );
+  connect(
+    this->ui.hardBotBtn, &QPushButton::clicked,
+    this, &MainWindow::onHardBotBtnClicked
   );
   connect(
     this->controller, &GameController::moveMade,
@@ -34,55 +38,43 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui() {
 
 
 void MainWindow::init() const {
-  this->ui.chessBoardView->init(this->boardModel);
-  this->boardModel->boardReset();
+  this->ui.chessBoardView->init();
+  this->controller->restartGame();
 }
 
 
 void MainWindow::updateMoveIndicator() const {
-  PiecesConstants::PIECE_COLORS activeColor = GameState::instance().getActiveColor();
-  if (GameState::instance().getGameStatus() == GameStateConstants::CHECKMATE) {
-    if (activeColor == PiecesConstants::PIECE_COLORS::WHITE)
-      this->ui.moveIndicator->setText(ConstantsUI::BLACK_CHECKMATED);
-    else this->ui.moveIndicator->setText(ConstantsUI::WHITE_CHECKMATED);
-  } else if (GameState::instance().getGameStatus() == GameStateConstants::STALEMATE) {
-    if (activeColor == PiecesConstants::PIECE_COLORS::WHITE)
-      this->ui.moveIndicator->setText(ConstantsUI::BLACK_STALEMATED);
-    else this->ui.moveIndicator->setText(ConstantsUI::WHITE_STALEMATED);
-  } else {
-    if (activeColor == GameState::instance().getUserColor())
+  if (GameState::instance().isGameActive()) {
+    if (GameState::instance().isUserMove())
       this->ui.moveIndicator->setText(ConstantsUI::YOUR_MOVE);
     else this->ui.moveIndicator->setText(ConstantsUI::BOT_MOVE);
+  } else {
+    this->ui.moveIndicator->setText(
+      ConstantsUI::ENDGAME_TEXTS[GameState::instance().getActiveColor()][
+        GameState::instance().getGameStatus()]
+    );
   }
 }
 
 
 void MainWindow::onRestartGameClicked() const {
-  this->boardModel->boardReset();
+  this->controller->restartGame();
   this->ui.chessBoardView->turningBoard();
   this->ui.tableView->cleanTable();
   GameState::instance().restart();
   updateMoveIndicator();
+  this->controller->tryEngineMove();
 }
 
 
-void MainWindow::onMoveMade(const MoveLog &log) const {
+void MainWindow::onMoveMade(const MoveLog& log) const {
   if (GameState::instance().getActiveColor() == PiecesConstants::PIECE_COLORS::WHITE)
     this->ui.tableView->addWhiteMove(log);
   else this->ui.tableView->addBlackMove(log);
 
   GameState::instance().moveMade();
   updateMoveIndicator();
-}
-
-
-void MainWindow::onModelBoardReset() const {
-  this->ui.chessBoardView->boardReset();
-}
-
-
-void MainWindow::onPieceRemoved(const Position from) const {
-  this->ui.chessBoardView->removePiece(from);
+  this->controller->tryEngineMove();
 }
 
 
@@ -100,4 +92,47 @@ void MainWindow::onPawnPromotion(
 
 void MainWindow::onEndGame() const {
   updateMoveIndicator();
+}
+
+
+void MainWindow::tryUpdateDifficultyBtn(
+  QPushButton* clicked,
+  const size_t clickedDepth
+) {
+  if (clicked && this->selectedDifficultyBtn != clicked) {
+    this->controller->updateEngineDepth(clickedDepth);
+
+    if (this->selectedDifficultyBtn) {
+      this->selectedDifficultyBtn->setStyleSheet(
+        ConstantsUI::DEFAULT_DIFFICULTY_BTN_STYLESHEET
+      );
+    }
+
+    clicked->setStyleSheet(ConstantsUI::SELECTED_DIFFICULTY_BTN_STYLESHEET);
+    this->selectedDifficultyBtn = clicked;
+  }
+}
+
+
+void MainWindow::onEasyBotBtnClicked() {
+  tryUpdateDifficultyBtn(
+    qobject_cast<QPushButton*>(sender()),
+    StockfishConstants::EASY_DEPTH
+  );
+}
+
+
+void MainWindow::onMediumBotBtnClicked() {
+  tryUpdateDifficultyBtn(
+    qobject_cast<QPushButton*>(sender()),
+    StockfishConstants::MEDIUM_DEPTH
+  );
+}
+
+
+void MainWindow::onHardBotBtnClicked() {
+  tryUpdateDifficultyBtn(
+    qobject_cast<QPushButton*>(sender()),
+    StockfishConstants::HARD_DEPTH
+  );
 }

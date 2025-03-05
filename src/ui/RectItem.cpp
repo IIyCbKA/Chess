@@ -1,5 +1,6 @@
 #include <ui/RectItem.hpp>
 #include <ui/SquareItem.hpp>
+#include <utils/utils.hpp>
 #include <constants.hpp>
 
 #include <QBrush>
@@ -20,7 +21,7 @@ void RectItem::mousePressEvent(QGraphicsSceneMouseEvent* event) {
 
 void RectItem::highlightSelectSquare() {
   this->isHighlightedSelect = true;
-  this->setBrush(QBrush(Colors::YELLOW));
+  this->setBrush(getHighlightSelectedColor(this->squareParent->getBrush().color()));
 }
 
 
@@ -30,10 +31,17 @@ void RectItem::highlightCheckSquare() {
 }
 
 
+void RectItem::highlightLastMove() {
+  this->isHighlightedLastMove = true;
+  this->setBrush(getHighlightLastMoveColor(this->squareParent->getBrush().color()));
+}
+
+
 void RectItem::unhighlightSelectSquare() {
   if (this->isHighlightedSelect) {
     this->isHighlightedSelect = false;
-    if (this->isHighlightedCheck) this->setBrush(QBrush(Colors::PASTEL_RED));
+    if (this->isHighlightedCheck) highlightCheckSquare();
+    else if (this->isHighlightedLastMove) highlightLastMove();
     else this->setBrush(this->squareParent->getBrush());
   }
 }
@@ -42,6 +50,14 @@ void RectItem::unhighlightSelectSquare() {
 void RectItem::unhighlightCheckSquare() {
   if (this->isHighlightedCheck) {
     this->isHighlightedCheck = false;
+    this->setBrush(this->squareParent->getBrush());
+  }
+}
+
+
+void RectItem::unhighlightLastMove() {
+  if (this->isHighlightedLastMove) {
+    this->isHighlightedLastMove = false;
     this->setBrush(this->squareParent->getBrush());
   }
 }

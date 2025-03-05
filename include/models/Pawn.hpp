@@ -8,7 +8,7 @@
 
 #include <optional>
 
-class Pawn : public Piece {
+class Pawn final : public Piece {
   static bool tryAddDefaultMove(
     const Board& board, Position curPosition,
     int deltaRow, int deltaCol, std::vector<Position>& moves

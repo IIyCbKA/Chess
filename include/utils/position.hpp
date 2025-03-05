@@ -11,7 +11,7 @@ struct Position {
   size_t col;
 
   bool operator==(const Position& other) const {
-    return row == other.row && col == other.col;
+    return this->row == other.row && this->col == other.col;
   }
 };
 

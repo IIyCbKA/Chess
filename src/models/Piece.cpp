@@ -4,10 +4,7 @@
 Piece::Piece(
   const PiecesConstants::PIECE_COLORS color,
   const PiecesConstants::PIECE_TYPES type
-) {
-  this->color = color;
-  this->type = type;
-}
+) : color(color), type(type) {}
 
 
 bool Piece::isWithinBounds(

@@ -2,7 +2,7 @@
 
 QFont createFont(const int pointSize) {
   QFont font;
-  font.setFamilies({QString::fromUtf8("System-ui")});
+  font.setFamilies({QString::fromUtf8("Helvetica")});
   font.setPointSize(pointSize);
   font.setBold(true);
 

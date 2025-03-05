@@ -5,7 +5,7 @@
 #include <utils/position.hpp>
 #include <constants.hpp>
 
-class King : public Piece {
+class King final : public Piece {
   static bool isValidCastleSquare(
     const Board& board,
     const AttackMap& attackMap,
@@ -24,6 +24,10 @@ class King : public Piece {
     Position pos, std::vector<Position>& moves
   ) const;
   [[nodiscard]] bool isValidRook(const Board& board, Position pos) const;
+  [[nodiscard]] bool isCanCastling(
+    const Board& board, const AttackMap& attackMap,
+    Position pos, const std::vector<size_t>& checkedCols, size_t rookCol
+  ) const;
 
 public:
   explicit King(const PiecesConstants::PIECE_COLORS color) :

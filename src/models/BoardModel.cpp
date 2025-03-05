@@ -7,54 +7,17 @@
 #include <models/Rook.hpp>
 #include <GameState.hpp>
 
-void BoardModel::setupPieces() {
-  for (size_t col = 0; col < BoardConstants::SQUARES_ROWS_COLS; ++col) {
-    this->board[6][col] = createPiece(
-      PiecesConstants::PIECE_TYPES::PAWN, PiecesConstants::PIECE_COLORS::WHITE);
-  }
-
-  this->board[7][0] = createPiece(
-    PiecesConstants::PIECE_TYPES::ROOK, PiecesConstants::PIECE_COLORS::WHITE);
-  this->board[7][1] = createPiece(
-    PiecesConstants::PIECE_TYPES::KNIGHT, PiecesConstants::PIECE_COLORS::WHITE);
-  this->board[7][2] = createPiece(
-    PiecesConstants::PIECE_TYPES::BISHOP, PiecesConstants::PIECE_COLORS::WHITE);
-  this->board[7][3] = createPiece(
-    PiecesConstants::PIECE_TYPES::QUEEN, PiecesConstants::PIECE_COLORS::WHITE);
-  this->board[7][4] = createPiece(
-    PiecesConstants::PIECE_TYPES::KING, PiecesConstants::PIECE_COLORS::WHITE);
-  this->board[7][5] = createPiece(
-    PiecesConstants::PIECE_TYPES::BISHOP, PiecesConstants::PIECE_COLORS::WHITE);
-  this->board[7][6] = createPiece(
-    PiecesConstants::PIECE_TYPES::KNIGHT, PiecesConstants::PIECE_COLORS::WHITE);
-  this->board[7][7] = createPiece(
-    PiecesConstants::PIECE_TYPES::ROOK, PiecesConstants::PIECE_COLORS::WHITE);
-
-  for (size_t col = 0; col < BoardConstants::SQUARES_ROWS_COLS; ++col) {
-    this->board[1][col] = createPiece(
-      PiecesConstants::PIECE_TYPES::PAWN, PiecesConstants::PIECE_COLORS::BLACK);
-  }
-
-  this->board[0][0] = createPiece(
-    PiecesConstants::PIECE_TYPES::ROOK, PiecesConstants::PIECE_COLORS::BLACK);
-  this->board[0][1] = createPiece(
-    PiecesConstants::PIECE_TYPES::KNIGHT, PiecesConstants::PIECE_COLORS::BLACK);
-  this->board[0][2] = createPiece(
-    PiecesConstants::PIECE_TYPES::BISHOP, PiecesConstants::PIECE_COLORS::BLACK);
-  this->board[0][3] = createPiece(
-    PiecesConstants::PIECE_TYPES::QUEEN, PiecesConstants::PIECE_COLORS::BLACK);
-  this->board[0][4] = createPiece(
-    PiecesConstants::PIECE_TYPES::KING, PiecesConstants::PIECE_COLORS::BLACK);
-  this->board[0][5] = createPiece(
-    PiecesConstants::PIECE_TYPES::BISHOP, PiecesConstants::PIECE_COLORS::BLACK);
-  this->board[0][6] = createPiece(
-    PiecesConstants::PIECE_TYPES::KNIGHT, PiecesConstants::PIECE_COLORS::BLACK);
-  this->board[0][7] = createPiece(
-    PiecesConstants::PIECE_TYPES::ROOK, PiecesConstants::PIECE_COLORS::BLACK);
+void BoardModel::setupPiece(
+  const Position pos,
+  const PiecesConstants::PIECE_COLORS color,
+  const PiecesConstants::PIECE_TYPES type
+) {
+  this->board[pos.row][pos.col] = createPiece(type, color);
 }
 
 
 void BoardModel::cleanBoard() {
+  this->halfMoveClock = 0;
   for (size_t row = 0; row < BoardConstants::SQUARES_ROWS_COLS; ++row) {
     for (size_t col = 0; col < BoardConstants::SQUARES_ROWS_COLS; ++col) {
       this->board[row][col].reset();
@@ -67,6 +30,16 @@ void BoardModel::cleanBoard() {
 
 Piece* BoardModel::getPiece(const Position piecePosition) const {
   return this->board[piecePosition.row][piecePosition.col].get();
+}
+
+
+void BoardModel::updateHalfMoveClock(const Position from, const Position to) {
+  if (
+    this->board[to.row][to.col] ||
+    this->board[from.row][from.col]->getType() == PiecesConstants::PIECE_TYPES::PAWN
+  ) {
+    this->halfMoveClock = 0;
+  } else this->halfMoveClock++;
 }
 
 
@@ -88,37 +61,23 @@ std::vector<Position> BoardModel::getSelectedCanMove() const {
 }
 
 
-void BoardModel::boardReset() {
-  cleanBoard();
-  setupPieces();
-  emit onBoardReset();
+void BoardModel::removePiece(const Position pos) {
+  this->board[pos.row][pos.col].reset();
 }
 
 
-void BoardModel::removePiece(const Position from) {
-  this->board[from.row][from.col].reset();
-  emit onPieceRemoved(from);
-}
-
-
-void BoardModel::clearEnPassant() {
-  if (
-    const auto enPassant = GameState::instance().getEnPassant();
-    enPassant.has_value() &&
-    GameState::instance().getActiveColor() != enPassant->pawnColor
-  ) {
-    GameState::instance().clearEnPassant();
-  }
+Position BoardModel::getCapturePos(const Position from, const Position to) const {
+  return this->board[from.row][from.col]->getCapturePosition(from, to);
 }
 
 
 void BoardModel::movePiece(const Position from, const Position to) {
-  removePiece(this->board[from.row][from.col]->getCapturePosition(from, to));
-  tryCastling(to);
+  updateHalfMoveClock(from, to);
+  tryCastling(from, to);
   this->board[to.row][to.col] = std::move(this->board[from.row][from.col]);
   this->board[to.row][to.col]->move();
   tryPawnPromotion(to);
-  clearEnPassant();
+  GameState::instance().clearEnPassant();
   updateAttackMap(GameState::instance().getActiveColor());
   searchCheck();
 }
@@ -156,10 +115,10 @@ bool BoardModel::checkPossibleMove(const Position from, const Position to) {
 void BoardModel::selectSquare(const Position to) {
   this->selectedPosition = to;
   std::vector<Position> defaultPossibleMoves =
-    getPossibleMoves(this->selectedPosition.value());
+    getPossibleMoves(*this->selectedPosition);
 
   for (const auto& possibleMove : defaultPossibleMoves) {
-    if (checkPossibleMove(this->selectedPosition.value(), possibleMove)) {
+    if (checkPossibleMove(*this->selectedPosition, possibleMove)) {
       this->selectedCanMove.emplace_back(possibleMove);
     }
   }
@@ -179,32 +138,31 @@ bool BoardModel::hasSelectedPiece() const {
 
 
 Position BoardModel::getSelectedPosition() const {
-  return this->selectedPosition.value();
+  return *this->selectedPosition;
 }
 
 
 bool BoardModel::isSamePosition(const Position pos) const {
   return
     this->selectedPosition.has_value() &&
-    this->selectedPosition.value() == pos;
+    *this->selectedPosition == pos;
 }
 
 
-bool BoardModel::isCastling(const Position to) const {
-  const auto* movingPiece =
-    this->board[this->selectedPosition->row][this->selectedPosition->col].get();
+bool BoardModel::isCastling(const Position from, const Position to) const {
+  const auto* movingPiece = this->board[from.row][from.col].get();
 
   return
     movingPiece->getType() == PiecesConstants::PIECE_TYPES::KING &&
-    std::abs(
-      static_cast<int>(to.col) - static_cast<int>(this->selectedPosition->col)
-    ) == 2;
+    std::abs(static_cast<int>(to.col) - static_cast<int>(from.col)) == 2;
 }
 
 
-void BoardModel::tryCastling(const Position to) {
-  if (isCastling(to)) {
-    const Position from = this->selectedPosition.value();
+void BoardModel::tryCastling(const Position from, const Position to) {
+  if (isCastling(from, to)) {
+    // to prevent castling from adding 2, we subtract the first addition
+    if (this->halfMoveClock) this->halfMoveClock--;
+
     Position rookFrom, rookTo;
     rookFrom.row = to.row;
     rookTo.row = to.row;
@@ -354,4 +312,66 @@ bool BoardModel::isPlayerHavePossibleMove() {
   }
 
   return false;
+}
+
+
+std::string BoardModel::getBoardForFEN() const {
+  std::string boardForFEN;
+  for (size_t row = 0; row < BoardConstants::SQUARES_ROWS_COLS; ++row) {
+    size_t emptyCount = 0;
+    for (size_t col = 0; col < BoardConstants::SQUARES_ROWS_COLS; ++col) {
+      if (this->board[row][col]) {
+        if (emptyCount) {
+          boardForFEN += std::to_string(emptyCount);
+          emptyCount = 0;
+        }
+
+        boardForFEN += ConstantsFEN::piecesInFEN[
+          this->board[row][col]->getColor()][this->board[row][col]->getType()];
+      } else emptyCount++;
+
+      if (col == BoardConstants::SQUARES_ROWS_COLS - 1 && emptyCount) {
+        boardForFEN += std::to_string(emptyCount);
+      }
+    }
+
+    if (row != BoardConstants::SQUARES_ROWS_COLS - 1) {
+      boardForFEN += ConstantsFEN::ROW_DIVIDER_FOR_BOARD;
+    }
+  }
+
+  return boardForFEN;
+}
+
+
+std::string BoardModel::getCastlingForFEN() const {
+  std::string castlingForFEN;
+  if (isNotMovedPiece(BoardConstants::DEFAULT_WHITE_KING_POS)) {
+    if (isNotMovedPiece(BoardConstants::DEFAULT_WHITE_KING_ROOK_POS))
+      castlingForFEN += ConstantsFEN::WHITE_KINGSIDE_CASTLING_FEN;
+    if (isNotMovedPiece(BoardConstants::DEFAULT_WHITE_QUEEN_ROOK_POS))
+      castlingForFEN += ConstantsFEN::WHITE_QUEENSIDE_CASTLING_FEN;
+  }
+
+  if (isNotMovedPiece(BoardConstants::DEFAULT_BLACK_KING_POS)) {
+    if (isNotMovedPiece(BoardConstants::DEFAULT_BLACK_KING_ROOK_POS))
+      castlingForFEN += ConstantsFEN::BLACK_KINGSIDE_CASTLING_FEN;
+    if (isNotMovedPiece(BoardConstants::DEFAULT_BLACK_QUEEN_ROOK_POS))
+      castlingForFEN += ConstantsFEN::BLACK_QUEENSIDE_CASTLING_FEN;
+  }
+
+  if (castlingForFEN.empty()) castlingForFEN = ConstantsFEN::EMPTY_CASTLING_FEN;
+
+  return castlingForFEN;
+}
+
+
+bool BoardModel::isNotMovedPiece(const Position pos) const {
+  return
+    this->board[pos.row][pos.col] && !this->board[pos.row][pos.col]->getIsMoved();
+}
+
+
+size_t BoardModel::getHalfMoveClock() const {
+  return this->halfMoveClock;
 }

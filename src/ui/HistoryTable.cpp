@@ -2,7 +2,7 @@
 #include <utils/utils.hpp>
 #include <constants.hpp>
 
-HistoryTable::HistoryTable(QWidget *parent) : QTableView(parent) {
+HistoryTable::HistoryTable(QWidget* parent) : QTableView(parent) {
   this->model = new QStandardItemModel(0, 3, this);
   this->setFont(ConstantsUI::FONT_TEXT);
 
@@ -44,7 +44,7 @@ void HistoryTable::updateHighlighted(QStandardItem* newItem) {
 }
 
 
-QString HistoryTable::moveToStr(const MoveLog &log) {
+QString HistoryTable::moveToStr(const MoveLog& log) {
   QString result;
   if (log.isCastling) {
     if (log.isKingSide) result = ConstantsUI::HISTORY_KINGSIDE_CASTLING;
@@ -57,7 +57,7 @@ QString HistoryTable::moveToStr(const MoveLog &log) {
     .arg(BoardConstants::SQUARES_ROWS_COLS - log.to.row);
 
     if (log.promotionType.has_value()) {
-      result += getPieceTypeInStr(log.promotionType.value());
+      result += pieceTypeToHistoryStr(*log.promotionType);
     }
   }
 
@@ -65,7 +65,7 @@ QString HistoryTable::moveToStr(const MoveLog &log) {
 }
 
 
-void HistoryTable::addWhiteMove(const MoveLog &log) {
+void HistoryTable::addWhiteMove(const MoveLog& log) {
   using namespace ConstantsUI;
 
   const int row = this->model->rowCount();
@@ -83,7 +83,7 @@ void HistoryTable::addWhiteMove(const MoveLog &log) {
 }
 
 
-void HistoryTable::addBlackMove(const MoveLog &log) {
+void HistoryTable::addBlackMove(const MoveLog& log) {
   using namespace ConstantsUI;
 
   const int row = this->model->rowCount() - 1;
@@ -99,20 +99,4 @@ void HistoryTable::addBlackMove(const MoveLog &log) {
 void HistoryTable::cleanTable() {
   this->model->setRowCount(0);
   this->highlightedItem = nullptr;
-}
-
-
-QString HistoryTable::getPieceTypeInStr(const PiecesConstants::PIECE_TYPES type) {
-  switch (type) {
-    case PiecesConstants::PIECE_TYPES::QUEEN:
-      return ConstantsUI::HISTORY_PROMOTION_TO_QUEEN;
-    case PiecesConstants::PIECE_TYPES::ROOK:
-      return ConstantsUI::HISTORY_PROMOTION_TO_ROOK;
-    case PiecesConstants::PIECE_TYPES::KNIGHT:
-      return ConstantsUI::HISTORY_PROMOTION_TO_KNIGHT;
-    case PiecesConstants::PIECE_TYPES::BISHOP:
-      return ConstantsUI::HISTORY_PROMOTION_TO_BISHOP;
-    default:
-      return ConstantsUI::HISTORY_PROMOTION_TO_QUEEN;
-  }
 }

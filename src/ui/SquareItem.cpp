@@ -1,6 +1,7 @@
 #include <ui/SquareItem.hpp>
 #include <constants.hpp>
 #include <ResourceManager.hpp>
+#include <utils/utils.hpp>
 
 #include<QPen>
 
@@ -10,10 +11,7 @@ SquareItem::SquareItem(const Position initPosition, const double squareSize)
 {
   this->drawPosition = this->realPosition;
 
-  this->brush = (this->drawPosition.row + this->drawPosition.col) % 2 == 0
-    ? QBrush(Colors::BEIGE)
-    : QBrush(Colors::BROWN);
-
+  this->brush = QBrush(getDefaultSquareColor(this->drawPosition));
   setRectByPos(squareSize);
   this->rect->setBrush(this->brush);
   this->rect->setPen(Qt::NoPen);

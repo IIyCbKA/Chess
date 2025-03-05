@@ -2,8 +2,8 @@
 #include <constants.hpp>
 
 bool King::isValidCastleSquare(
-  const Board &board,
-  const AttackMap &attackMap,
+  const Board& board,
+  const AttackMap& attackMap,
   const Position pos
 ) {
   return
@@ -12,7 +12,7 @@ bool King::isValidCastleSquare(
 }
 
 
-bool King::isValidRook(const Board &board, const Position pos) const {
+bool King::isValidRook(const Board& board, const Position pos) const {
   return
     board[pos.row][pos.col]
     && board[pos.row][pos.col]->getColor() == this->color
@@ -22,9 +22,9 @@ bool King::isValidRook(const Board &board, const Position pos) const {
 
 
 void King::getDefaultMoves(
-  const Board &board,
+  const Board& board,
   const Position curPosition,
-  std::vector<Position> &moves
+  std::vector<Position>& moves
 ) const {
   for (const auto [deltaRow, deltaCol] : PiecesConstants::KING_MOVES) {
     if (isWithinBounds(curPosition, deltaRow, deltaCol)) {
@@ -41,34 +41,52 @@ void King::getDefaultMoves(
 }
 
 
+bool King::isCanCastling(
+  const Board& board,
+  const AttackMap& attackMap,
+  const Position pos,
+  const std::vector<size_t>& checkedCols,
+  const size_t rookCol
+) const {
+  if (this->isMoved) return false;
+
+  for (const size_t checkedCol : checkedCols) {
+    const Position checkPos{pos.row, checkedCol};
+    if (!isValidCastleSquare(board, attackMap, checkPos)) return false;
+  }
+
+  const Position rookPos{pos.row, rookCol};
+  return isValidRook(board, rookPos);
+}
+
+
 void King::canKingSideCastling(
-  const Board &board,
+  const Board& board,
   const AttackMap& attackMap,
   Position pos,
   std::vector<Position> &moves
 ) const {
-  if (
-    !this->isMoved
-    && isValidCastleSquare(board, attackMap, {pos.row, pos.col + BoardConstants::CASTLING_FIRST_OFFSET})
-    && isValidCastleSquare(board, attackMap, {pos.row, pos.col + BoardConstants::CASTLING_SECOND_OFFSET})
-    && isValidRook(board, {pos.row, pos.col + BoardConstants::KINGSIDE_CASTLING_ROOK_OFFSET})
-  ) moves.emplace_back(pos.row, pos.col + BoardConstants::CASTLING_SECOND_OFFSET);
+  if (isCanCastling(
+    board, attackMap, pos, BoardConstants::KINGSIDE_CASTLING_CHECKED_COLS,
+    BoardConstants::DEFAULT_KINGSIDE_ROOK_COL
+  )) {
+    moves.emplace_back(pos.row, BoardConstants::KINGSIDE_CASTLING_NEW_KING_COL);
+  }
 }
 
 
 void King::canQueenSideCastling(
-  const Board &board,
+  const Board& board,
   const AttackMap& attackMap,
   Position pos,
-  std::vector<Position> &moves
+  std::vector<Position>& moves
 ) const {
-  if (
-    !this->isMoved
-    && isValidCastleSquare(board, attackMap, {pos.row, pos.col - BoardConstants::CASTLING_FIRST_OFFSET})
-    && isValidCastleSquare(board, attackMap, {pos.row, pos.col - BoardConstants::CASTLING_SECOND_OFFSET})
-    && isValidCastleSquare(board, attackMap, {pos.row, pos.col - BoardConstants::CASTLING_THIRD_OFFSET})
-    && isValidRook(board, {pos.row, pos.col - BoardConstants::QUEENSIDE_CASTLING_ROOK_OFFSET})
-  ) moves.emplace_back(pos.row, pos.col - BoardConstants::CASTLING_SECOND_OFFSET);
+  if (isCanCastling(
+    board, attackMap, pos, BoardConstants::QUEENSIDE_CASTLING_CHECKED_COLS,
+    BoardConstants::DEFAULT_QUEENSIDE_ROOK_COL
+  )) {
+    moves.emplace_back(pos.row, BoardConstants::QUEENSIDE_CASTLING_NEW_KING_COL);
+  }
 }
 
 

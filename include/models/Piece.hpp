@@ -24,11 +24,12 @@ protected:
   PiecesConstants::PIECE_TYPES type;
   bool isMoved = false;
 
+  static bool isWithinBounds(Position curPosition, int moveRow, int moveCol);
+
 public:
   Piece(PiecesConstants::PIECE_COLORS color, PiecesConstants::PIECE_TYPES type);
 
   void move() { this->isMoved = true; }
-  static bool isWithinBounds(Position curPosition, int moveRow, int moveCol);
   [[nodiscard]] PiecesConstants::PIECE_COLORS getColor() const { return this->color; }
   [[nodiscard]] PiecesConstants::PIECE_TYPES getType() const { return this->type; }
   [[nodiscard]] bool getIsMoved() const { return this->isMoved; }

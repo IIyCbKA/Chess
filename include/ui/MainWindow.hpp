@@ -7,26 +7,26 @@
 #include <constants.hpp>
 #include <GameController.hpp>
 
-class MainWindow : public QMainWindow {
+class MainWindow final : public QMainWindow {
   Q_OBJECT;
   Ui::MainWindow ui;
-  BoardModel* boardModel = nullptr;
   GameController* controller = nullptr;
+  QPushButton* selectedDifficultyBtn = nullptr;
 
   void updateMoveIndicator() const;
+  void tryUpdateDifficultyBtn(QPushButton* clicked, size_t clickedDepth);
 
 public:
-  explicit MainWindow(QWidget *parent = nullptr);
-
+  explicit MainWindow(QWidget* parent = nullptr);
   void init() const;
-
   ~MainWindow() override = default;
 
 private slots:
+  void onEasyBotBtnClicked();
+  void onMediumBotBtnClicked();
+  void onHardBotBtnClicked();
   void onRestartGameClicked() const;
-  void onMoveMade(const MoveLog &log) const;
-  void onModelBoardReset() const;
-  void onPieceRemoved(Position from) const;
+  void onMoveMade(const MoveLog& log) const;
   void onPawnPromotion(Position pos, PiecesConstants::PIECE_COLORS color);
   void onEndGame() const;
 };
