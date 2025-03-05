@@ -1,7 +1,7 @@
-# Chess[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/IIyCbKA/Chess/blob/main/LICENSE) [![Compiler](https://img.shields.io/badge/Compiler-C++20-blue)](https://isocpp.org) [![UI_framework](https://img.shields.io/badge/UI_framework-Qt6-green)](https://www.qt.io/blog/qt-6.2-lts-released)
+# Chess [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/IIyCbKA/Chess/blob/main/LICENSE) [![Compiler](https://img.shields.io/badge/Compiler-C++20-blue)](https://isocpp.org) [![UI_framework](https://img.shields.io/badge/UI_framework-Qt6-green)](https://www.qt.io/blog/qt-6.2-lts-released)
 
 ## 🔧 Application Overview
-🎮 This app is a wrapper for interacting with chess engines. Current version supports **Stockfish**.
+This app is a wrapper for interacting with chess engines. Current version supports **Stockfish**.
 
 **Requirements**:
 - Install **Qt6** framework.
