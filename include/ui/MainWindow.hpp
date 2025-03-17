@@ -7,9 +7,11 @@
 #include <constants.hpp>
 #include <GameController.hpp>
 
+#include <memory>
+
 class MainWindow final : public QMainWindow {
   Q_OBJECT;
-  Ui::MainWindow ui;
+  std::unique_ptr<Ui::MainWindow> ui;
   GameController* controller = nullptr;
   QPushButton* selectedDifficultyBtn = nullptr;
 
@@ -22,9 +24,6 @@ public:
   ~MainWindow() override = default;
 
 private slots:
-  void onEasyBotBtnClicked();
-  void onMediumBotBtnClicked();
-  void onHardBotBtnClicked();
   void onRestartGameClicked() const;
   void onMoveMade(const MoveLog& log) const;
   void onPawnPromotion(Position pos, PiecesConstants::PIECE_COLORS color);

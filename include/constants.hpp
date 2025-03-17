@@ -120,6 +120,9 @@ namespace GameStateConstants {
 }
 
 namespace ConstantsUI {
+  inline constexpr size_t SCENE_X_INDENTATION = 0;
+  inline constexpr size_t SCENE_Y_INDENTATION = 0;
+
   inline const auto YOUR_MOVE = QStringLiteral("Your move");
   inline const auto BOT_MOVE = QStringLiteral("Waiting for opponent");
 
@@ -134,7 +137,11 @@ namespace ConstantsUI {
     NUMBER_OF_PAIR = 0,
     WHITE_MOVE = 1,
     BLACK_MOVE = 2,
+    COUNT = 3,
   };
+
+  inline constexpr size_t EMPTY_HISTORY_TABLE_ROWS = 0;
+  inline constexpr size_t HISTORY_TABLE_COL_NUMBER_OF_PAIR_WIDTH = 64;
 
   inline const auto HISTORY_DEFAULT_MASK = QStringLiteral("%1%2%3%4");
   inline const auto HISTORY_KINGSIDE_CASTLING = QStringLiteral("O-O");

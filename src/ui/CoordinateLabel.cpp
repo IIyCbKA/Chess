@@ -22,7 +22,7 @@ CoordinateLabel::CoordinateLabel(
 
 void CoordinateLabel::updatePosition(const double squareSize) {
   this->setFont(
-    createFont(squareSize * BoardConstants::FONT_SIZE_DEPENDS_ON_SQUARE)
+    createFont(static_cast<int>(squareSize * BoardConstants::FONT_SIZE_DEPENDS_ON_SQUARE))
   );
 
   double x = static_cast<double>(this->position.col) * squareSize;

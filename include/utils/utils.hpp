@@ -48,6 +48,25 @@ inline QString pieceTypeToHistoryStr(const PiecesConstants::PIECE_TYPES type) {
   }
 }
 
+inline std::pair<Position, Position> getCastlingRookMove(
+  const Position kingFrom,
+  const Position kingTo
+) {
+  Position rookFrom, rookTo;
+  rookFrom.row = kingTo.row;
+  rookTo.row = kingTo.row;
+
+  if (kingTo.col > kingFrom.col) {
+    rookFrom.col = BoardConstants::DEFAULT_KINGSIDE_ROOK_COL;
+    rookTo.col = BoardConstants::KINGSIDE_CASTLING_NEW_ROOK_COL;
+  } else {
+    rookFrom.col = BoardConstants::DEFAULT_QUEENSIDE_ROOK_COL;
+    rookTo.col = BoardConstants::QUEENSIDE_CASTLING_NEW_ROOK_COL;
+  }
+
+  return std::make_pair(rookFrom, rookTo);
+}
+
 inline QColor getHighlightSelectedColor(const QColor baseColor) {
   if (baseColor == Colors::BEIGE) return Colors::HIGHLIGHTED_SELECTED_BEIGE;
   return Colors::HIGHLIGHTED_SELECTED_BROWN;

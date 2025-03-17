@@ -71,15 +71,14 @@ Position BoardModel::getCapturePos(const Position from, const Position to) const
 }
 
 
-void BoardModel::movePiece(const Position from, const Position to) {
-  updateHalfMoveClock(from, to);
-  tryCastling(from, to);
+void BoardModel::movePiece(
+  const Position from,
+  const Position to,
+  const bool isTrackMove
+) {
+  if (isTrackMove) updateHalfMoveClock(from, to);
   this->board[to.row][to.col] = std::move(this->board[from.row][from.col]);
   this->board[to.row][to.col]->move();
-  tryPawnPromotion(to);
-  GameState::instance().clearEnPassant();
-  updateAttackMap(GameState::instance().getActiveColor());
-  searchCheck();
 }
 
 
@@ -150,33 +149,11 @@ bool BoardModel::isSamePosition(const Position pos) const {
 
 
 bool BoardModel::isCastling(const Position from, const Position to) const {
-  const auto* movingPiece = this->board[from.row][from.col].get();
+  const auto* movingPiece = this->board[to.row][to.col].get();
 
   return
     movingPiece->getType() == PiecesConstants::PIECE_TYPES::KING &&
     std::abs(static_cast<int>(to.col) - static_cast<int>(from.col)) == 2;
-}
-
-
-void BoardModel::tryCastling(const Position from, const Position to) {
-  if (isCastling(from, to)) {
-    // to prevent castling from adding 2, we subtract the first addition
-    if (this->halfMoveClock) this->halfMoveClock--;
-
-    Position rookFrom, rookTo;
-    rookFrom.row = to.row;
-    rookTo.row = to.row;
-
-    if (to.col > from.col) {
-      rookFrom.col = BoardConstants::DEFAULT_KINGSIDE_ROOK_COL;
-      rookTo.col = BoardConstants::KINGSIDE_CASTLING_NEW_ROOK_COL;
-    } else {
-      rookFrom.col = BoardConstants::DEFAULT_QUEENSIDE_ROOK_COL;
-      rookTo.col = BoardConstants::QUEENSIDE_CASTLING_NEW_ROOK_COL;
-    }
-
-    emit onMoveRook(rookFrom, rookTo);
-  }
 }
 
 
@@ -186,13 +163,6 @@ bool BoardModel::isPawnPromotion(const Position pos) const {
   return
     movingPiece->getType() == PiecesConstants::PIECE_TYPES::PAWN &&
     (pos.row == 0 || pos.row == BoardConstants::SQUARES_ROWS_COLS - 1);
-}
-
-
-void BoardModel::tryPawnPromotion(const Position pos) {
-  if (isPawnPromotion(pos)) {
-    emit onPawnPromotion(pos, this->board[pos.row][pos.col]->getColor());
-  }
 }
 
 
@@ -234,12 +204,8 @@ std::unique_ptr<Piece> BoardModel::createPiece(
 }
 
 
-void BoardModel::searchCheck() {
-  PiecesConstants::PIECE_COLORS opponentColor = GameState::instance().getInactiveColor();
-  Position posOpponentKing = getKingPosByColor(opponentColor);
-  if (this->attackMap[posOpponentKing.row][posOpponentKing.col]) {
-    emit onCheck(posOpponentKing, opponentColor);
-  }
+bool BoardModel::isUnderAttack(const Position pos) const {
+  return this->attackMap[pos.row][pos.col];
 }
 
 
@@ -261,11 +227,12 @@ Position BoardModel::getKingPosByColor(const PiecesConstants::PIECE_COLORS color
 }
 
 
-void BoardModel::updateAttackMap(const PiecesConstants::PIECE_COLORS color) {
+void BoardModel::updateAttackMap() {
   for (size_t row = 0; row < BoardConstants::SQUARES_ROWS_COLS; ++row) {
     this->attackMap[row].reset();
   }
 
+  const PiecesConstants::PIECE_COLORS color = GameState::instance().getActiveColor();
   for (size_t row = 0; row < BoardConstants::SQUARES_ROWS_COLS; ++row) {
     for (size_t col = 0; col < BoardConstants::SQUARES_ROWS_COLS; ++col) {
       if (this->board[row][col] && this->board[row][col]->getColor() == color) {

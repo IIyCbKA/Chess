@@ -7,25 +7,25 @@
 
 class King final : public Piece {
   static bool isValidCastleSquare(
-    const Board& board,
+    const ModelBoard& board,
     const AttackMap& attackMap,
     Position pos
   );
 
   void getDefaultMoves(
-    const Board& board, Position curPosition, std::vector<Position>& moves
+    const ModelBoard& board, Position curPosition, std::vector<Position>& moves
   ) const;
   void canKingSideCastling(
-    const Board& board, const AttackMap& attackMap,
+    const ModelBoard& board, const AttackMap& attackMap,
     Position pos, std::vector<Position>& moves
   ) const;
   void canQueenSideCastling(
-    const Board& board, const AttackMap& attackMap,
+    const ModelBoard& board, const AttackMap& attackMap,
     Position pos, std::vector<Position>& moves
   ) const;
-  [[nodiscard]] bool isValidRook(const Board& board, Position pos) const;
+  [[nodiscard]] bool isValidRook(const ModelBoard& board, Position pos) const;
   [[nodiscard]] bool isCanCastling(
-    const Board& board, const AttackMap& attackMap,
+    const ModelBoard& board, const AttackMap& attackMap,
     Position pos, const std::vector<size_t>& checkedCols, size_t rookCol
   ) const;
 
@@ -34,7 +34,7 @@ public:
     Piece(color, PiecesConstants::KING) {}
 
   std::vector<Position> getPossibleMoves(
-    const Board& board, const AttackMap& attackMap, Position curPosition
+    const ModelBoard& board, const AttackMap& attackMap, Position curPosition
   ) override;
 
   ~King() override = default;

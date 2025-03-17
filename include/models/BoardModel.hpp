@@ -2,6 +2,7 @@
 #define BOARDMODEL_HPP
 
 #include <models/Piece.hpp>
+#include <utils/BoardTypes.hpp>
 #include <utils/position.hpp>
 #include <constants.hpp>
 
@@ -9,20 +10,12 @@
 #include <bitset>
 #include <memory>
 #include <optional>
-#include <QObject>
 
-class BoardModel final : public QObject {
-  Q_OBJECT;
-  std::array<
-    std::array<std::unique_ptr<Piece>, BoardConstants::SQUARES_ROWS_COLS>,
-    BoardConstants::SQUARES_ROWS_COLS
-  > board;
+class BoardModel {
+  ModelBoard board;
   std::optional<Position> selectedPosition;
   std::vector<Position> selectedCanMove;
-  std::array<
-    std::bitset<BoardConstants::SQUARES_ROWS_COLS>,
-    BoardConstants::SQUARES_ROWS_COLS
-  > attackMap;
+  AttackMap attackMap;
   size_t halfMoveClock = 0;
 
   static std::unique_ptr<Piece> createPiece(
@@ -31,17 +24,13 @@ class BoardModel final : public QObject {
   );
 
   void updateHalfMoveClock(Position from, Position to);
-  void tryCastling(Position from, Position to);
-  void tryPawnPromotion(Position pos);
-  void searchCheck();
-  void updateAttackMap(PiecesConstants::PIECE_COLORS color);
   bool checkPossibleMove(Position from, Position to);
-  [[nodiscard]] bool isCastling(Position from, Position to) const;
-  [[nodiscard]] bool isPawnPromotion(Position pos) const;
-  [[nodiscard]] bool isPosUnderAttack(Position checkPos, PiecesConstants::PIECE_COLORS opponentColor) const;
-  [[nodiscard]] Position getKingPosByColor(PiecesConstants::PIECE_COLORS color) const;
   [[nodiscard]] std::vector<Position> getPossibleMoves(Position pos) const;
   [[nodiscard]] bool isNotMovedPiece(Position pos) const;
+  [[nodiscard]] bool isPosUnderAttack(
+    Position checkPos,
+    PiecesConstants::PIECE_COLORS opponentColor
+  ) const;
 
 public:
   BoardModel() = default;
@@ -52,7 +41,8 @@ public:
     PiecesConstants::PIECE_TYPES type
   );
   void removePiece(Position pos);
-  void movePiece(Position from, Position to);
+  void movePiece(Position from, Position to, bool isTrackMove);
+  void updateAttackMap();
   void deselectSquare();
   void selectSquare(Position to);
   void changePawnType(
@@ -73,13 +63,12 @@ public:
   [[nodiscard]] std::string getCastlingForFEN() const;
   [[nodiscard]] size_t getHalfMoveClock() const;
   [[nodiscard]] Position getCapturePos(Position from, Position to) const;
+  [[nodiscard]] bool isCastling(Position from, Position to) const;
+  [[nodiscard]] bool isPawnPromotion(Position pos) const;
+  [[nodiscard]] bool isUnderAttack(Position pos) const;
+  [[nodiscard]] Position getKingPosByColor(PiecesConstants::PIECE_COLORS color) const;
 
-  ~BoardModel() override = default;
-
-signals:
-  void onMoveRook(Position rookFrom, Position rookTo);
-  void onPawnPromotion(Position pos, PiecesConstants::PIECE_COLORS color);
-  void onCheck(Position pos, PiecesConstants::PIECE_COLORS color);
+  ~BoardModel() = default;
 };
 
 #endif //BOARDMODEL_HPP

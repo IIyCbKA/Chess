@@ -5,7 +5,7 @@
 #include <algorithm>
 
 bool Pawn::tryAddDefaultMove(
-  const Board& board, const Position curPosition,
+  const ModelBoard& board, const Position curPosition,
   const int deltaRow, const int deltaCol, std::vector<Position> &moves
 ) {
   if (isWithinBounds(curPosition, deltaRow, deltaCol)) {
@@ -23,7 +23,7 @@ bool Pawn::tryAddDefaultMove(
 
 
 void Pawn::getDefaultMoves(
-  const Board& board, const Position curPosition, std::vector<Position>& moves
+  const ModelBoard& board, const Position curPosition, std::vector<Position>& moves
 ) const {
   auto [deltaRow, deltaCol] = PiecesConstants::PAWN_DEFAULT_MOVE[this->color];
   if (
@@ -38,7 +38,7 @@ void Pawn::getDefaultMoves(
 
 
 void Pawn::getAttackMoves(
-  const Board& board, const Position curPosition, std::vector<Position> &moves
+  const ModelBoard& board, const Position curPosition, std::vector<Position> &moves
 ) const {
   for (
     const auto [deltaRow, deltaCol] :
@@ -73,7 +73,7 @@ std::optional<EnPassant> Pawn::tryGetEnPassantCapture(const Position to) const {
 
 
 std::vector<Position> Pawn::getPossibleMoves(
-  const Board& board, const AttackMap& attackMap, const Position curPosition
+  const ModelBoard& board, const AttackMap& attackMap, const Position curPosition
 ) {
   std::vector<Position> moves;
   getDefaultMoves(board, curPosition, moves);

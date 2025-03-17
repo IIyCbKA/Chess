@@ -3,6 +3,7 @@
 
 #include <ui/CoordinateLabel.hpp>
 #include <ui/SquareItem.hpp>
+#include <utils/BoardTypes.hpp>
 #include <utils/highlightFlags.hpp>
 #include <constants.hpp>
 
@@ -12,10 +13,7 @@
 class BoardView final : public QGraphicsView {
   Q_OBJECT;
   QGraphicsScene* scene = nullptr;
-  std::array<
-    std::array<SquareItem*, BoardConstants::SQUARES_ROWS_COLS>,
-    BoardConstants::SQUARES_ROWS_COLS
-  > board{};
+  ViewBoard board{};
   std::vector<CoordinateLabel*> coordinateLabels;
   double boardSize = 0;
   double squareSize = 0;
@@ -46,6 +44,11 @@ public:
     Position to,
     PiecesConstants::PIECE_COLORS color,
     PiecesConstants::PIECE_TYPES type
+  ) const;
+  void replacePiece(
+    Position pos,
+    PiecesConstants::PIECE_COLORS color,
+    PiecesConstants::PIECE_TYPES newType
   ) const;
 
 signals:

@@ -13,18 +13,6 @@ GameController::GameController(BoardView* view, QObject* parent)
     this, &GameController::onSquareClicked
   );
   connect(
-    this->model, &BoardModel::onMoveRook,
-    this, &GameController::onCastlingMoveRook
-  );
-  connect(
-    this->model, &BoardModel::onPawnPromotion,
-    this, &GameController::onPawnPromotion
-  );
-  connect(
-    this->model, &BoardModel::onCheck,
-    this, &GameController::onCheck
-  );
-  connect(
     this->stockfishEngine, &StockfishEngine::bestMoveReady,
     this, &GameController::onStockfishMove
   );
@@ -66,16 +54,22 @@ void GameController::deselectSquare() const {
 }
 
 
-void GameController::performMovePiece(const PerformMoveData& data) {
-  clearCheckAndLastMove();
-  removePieceBeforeMove(data.from, data.to);
-  this->model->movePiece(data.from, data.to);
+void GameController::performCoreMove(const PerformMoveData& data) const {
+  this->model->movePiece(data.from, data.to, data.isTrackMove);
   this->view->applyMoveEffect(
     data.from,
     data.to,
     this->model->getPiece(data.to)->getColor(),
     this->model->getPiece(data.to)->getType()
   );
+}
+
+
+void GameController::performMovePiece(const PerformMoveData& data) {
+  clearCheckAndLastMove();
+  removePieceBeforeMove(data.from, data.to);
+  performCoreMove(data);
+  afterMoveInModelGameLogic(data.from, data.to);
 
   if (data.isTrackMove) {
     this->view->highlightLastMoveSquares(data.from, data.to);
@@ -83,6 +77,49 @@ void GameController::performMovePiece(const PerformMoveData& data) {
   }
 
   endGameCheck();
+}
+
+
+void GameController::afterMoveInModelGameLogic(
+  const Position from,
+  const Position to
+) {
+  tryHandleCastling(from, to);
+  tryPromotePawn(to);
+  GameState::instance().clearEnPassant();
+  this->model->updateAttackMap();
+  updateCheckState();
+}
+
+
+void GameController::tryHandleCastling(const Position from, const Position to) const {
+  if (this->model->isCastling(from, to)) {
+    const auto [rookFrom, rookTo] = getCastlingRookMove(from, to);
+    performCoreMove({.from = rookFrom, .to = rookTo, .isTrackMove = false});
+  }
+}
+
+
+void GameController::tryPromotePawn(const Position to) {
+  if (this->model->isPawnPromotion(to)) {
+    const PiecesConstants::PIECE_COLORS pawnColor = this->model->getPiece(to)->getColor();
+    if (GameState::instance().isUserMove()) {
+      emit pawnPromotion(to, pawnColor);
+    } else {
+      changePawnType(to, *this->enginePromotionSelection, pawnColor);
+      this->enginePromotionSelection.reset();
+    }
+  }
+}
+
+
+void GameController::updateCheckState() const {
+  const PiecesConstants::PIECE_COLORS opponentColor = GameState::instance().getInactiveColor();
+  const Position posOpponentKing = this->model->getKingPosByColor(opponentColor);
+  if (this->model->isUnderAttack(posOpponentKing)) {
+    this->view->highlightCheckSquare(posOpponentKing);
+    GameState::instance().setCheck(opponentColor);
+  }
 }
 
 
@@ -147,40 +184,14 @@ void GameController::onSquareClicked(const Position pos) {
 }
 
 
-void GameController::onCastlingMoveRook(const Position from, const Position to) {
-  performMovePiece({.from = from, .to = to, .isTrackMove = false});
-}
-
-
-void GameController::onPawnPromotion(
-  const Position pos,
-  const PiecesConstants::PIECE_COLORS color
-) {
-  if (GameState::instance().isUserMove()) {
-    emit pawnPromotion(pos, color);
-  } else {
-    changePawnType(pos, *this->enginePromotionSelection, color);
-    this->enginePromotionSelection.reset();
-  }
-}
-
-
 void GameController::changePawnType(
   const Position pos,
   const PiecesConstants::PIECE_TYPES newType,
   const PiecesConstants::PIECE_COLORS color
 ) {
   this->model->changePawnType(pos, newType, color);
+  this->view->replacePiece(pos, color, newType);
   this->promotionPending = newType;
-}
-
-
-void GameController::onCheck(
-  const Position pos,
-  const PiecesConstants::PIECE_COLORS color
-) const {
-  this->view->highlightCheckSquare(pos);
-  GameState::instance().setCheck(color);
 }
 
 

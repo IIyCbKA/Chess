@@ -10,14 +10,14 @@
 
 class Pawn final : public Piece {
   static bool tryAddDefaultMove(
-    const Board& board, Position curPosition,
+    const ModelBoard& board, Position curPosition,
     int deltaRow, int deltaCol, std::vector<Position>& moves
   );
   void getDefaultMoves(
-    const Board& board, Position curPosition, std::vector<Position>& moves
+    const ModelBoard& board, Position curPosition, std::vector<Position>& moves
   ) const;
   void getAttackMoves(
-    const Board& board, Position curPosition, std::vector<Position>& moves
+    const ModelBoard& board, Position curPosition, std::vector<Position>& moves
   ) const;
 
   [[nodiscard]] std::optional<EnPassant> tryGetEnPassantCapture(Position to) const;
@@ -27,7 +27,7 @@ public:
     Piece(color, PiecesConstants::PAWN) {}
 
   std::vector<Position> getPossibleMoves(
-    const Board& board, const AttackMap& attackMap, Position curPosition
+    const ModelBoard& board, const AttackMap& attackMap, Position curPosition
   ) override;
   Position getCapturePosition(Position from, Position to) override;
 

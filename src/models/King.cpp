@@ -2,7 +2,7 @@
 #include <constants.hpp>
 
 bool King::isValidCastleSquare(
-  const Board& board,
+  const ModelBoard& board,
   const AttackMap& attackMap,
   const Position pos
 ) {
@@ -12,7 +12,7 @@ bool King::isValidCastleSquare(
 }
 
 
-bool King::isValidRook(const Board& board, const Position pos) const {
+bool King::isValidRook(const ModelBoard& board, const Position pos) const {
   return
     board[pos.row][pos.col]
     && board[pos.row][pos.col]->getColor() == this->color
@@ -22,7 +22,7 @@ bool King::isValidRook(const Board& board, const Position pos) const {
 
 
 void King::getDefaultMoves(
-  const Board& board,
+  const ModelBoard& board,
   const Position curPosition,
   std::vector<Position>& moves
 ) const {
@@ -42,7 +42,7 @@ void King::getDefaultMoves(
 
 
 bool King::isCanCastling(
-  const Board& board,
+  const ModelBoard& board,
   const AttackMap& attackMap,
   const Position pos,
   const std::vector<size_t>& checkedCols,
@@ -61,7 +61,7 @@ bool King::isCanCastling(
 
 
 void King::canKingSideCastling(
-  const Board& board,
+  const ModelBoard& board,
   const AttackMap& attackMap,
   Position pos,
   std::vector<Position> &moves
@@ -76,7 +76,7 @@ void King::canKingSideCastling(
 
 
 void King::canQueenSideCastling(
-  const Board& board,
+  const ModelBoard& board,
   const AttackMap& attackMap,
   Position pos,
   std::vector<Position>& moves
@@ -91,7 +91,7 @@ void King::canQueenSideCastling(
 
 
 std::vector<Position> King::getPossibleMoves(
-  const Board& board, const AttackMap& attackMap, const Position curPosition
+  const ModelBoard& board, const AttackMap& attackMap, const Position curPosition
 ) {
   std::vector<Position> moves;
   getDefaultMoves(board, curPosition, moves);

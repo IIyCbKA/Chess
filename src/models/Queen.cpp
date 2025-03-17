@@ -2,7 +2,7 @@
 #include <constants.hpp>
 
 std::vector<Position> Queen::getPossibleMoves(
-  const Board& board, const AttackMap& attackMap, const Position curPosition
+  const ModelBoard& board, const AttackMap& attackMap, const Position curPosition
 ) {
   std::vector<Position> moves;
   for (const auto [deltaRow, deltaCol] : PiecesConstants::QUEEN_MOVES) {

@@ -1,22 +1,9 @@
 #ifndef PIECE_HPP
 #define PIECE_HPP
 
+#include <utils/BoardTypes.hpp>
 #include <utils/position.hpp>
 #include <constants.hpp>
-
-#include <bitset>
-
-class Piece;
-
-using Board = std::array<
-  std::array<std::unique_ptr<Piece>, BoardConstants::SQUARES_ROWS_COLS>,
-  BoardConstants::SQUARES_ROWS_COLS
->;
-
-using AttackMap = std::array<
-  std::bitset<BoardConstants::SQUARES_ROWS_COLS>,
-  BoardConstants::SQUARES_ROWS_COLS
->;
 
 class Piece {
 protected:
@@ -35,7 +22,7 @@ public:
   [[nodiscard]] bool getIsMoved() const { return this->isMoved; }
   virtual Position getCapturePosition(const Position from, const Position to) { return to; }
   virtual std::vector<Position> getPossibleMoves(
-    const Board& board, const AttackMap& attackMap, Position curPosition
+    const ModelBoard& board, const AttackMap& attackMap, Position curPosition
   ) = 0;
 
   virtual ~Piece() = default;

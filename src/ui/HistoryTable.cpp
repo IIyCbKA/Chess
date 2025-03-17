@@ -3,7 +3,11 @@
 #include <constants.hpp>
 
 HistoryTable::HistoryTable(QWidget* parent) : QTableView(parent) {
-  this->model = new QStandardItemModel(0, 3, this);
+  this->model = new QStandardItemModel(
+    ConstantsUI::EMPTY_HISTORY_TABLE_ROWS,
+    ConstantsUI::HISTORY_TABLE_COLS::COUNT,
+    this
+  );
   this->setFont(ConstantsUI::FONT_TEXT);
 
   this->model->setHorizontalHeaderLabels({
@@ -28,7 +32,10 @@ HistoryTable::HistoryTable(QWidget* parent) : QTableView(parent) {
     QHeaderView::Stretch
   );
   this->verticalHeader()->setSectionResizeMode(QHeaderView::Fixed);
-  setColumnWidth(0, 64);
+  setColumnWidth(
+    ConstantsUI::HISTORY_TABLE_COLS::NUMBER_OF_PAIR,
+    ConstantsUI::HISTORY_TABLE_COL_NUMBER_OF_PAIR_WIDTH
+  );
 
   this->setSelectionMode(QAbstractItemView::NoSelection);
   this->setEditTriggers(QAbstractItemView::NoEditTriggers);
@@ -71,11 +78,11 @@ void HistoryTable::addWhiteMove(const MoveLog& log) {
   const int row = this->model->rowCount();
   this->model->insertRow(row);
 
-  auto *itemNumber = new QStandardItem(QString::number(row + 1));
+  auto* itemNumber = new QStandardItem(QString::number(row + 1));
   itemNumber->setTextAlignment(Qt::AlignCenter);
   this->model->setItem(row, HISTORY_TABLE_COLS::NUMBER_OF_PAIR, itemNumber);
 
-  auto *itemWhite = new QStandardItem(moveToStr(log));
+  auto* itemWhite = new QStandardItem(moveToStr(log));
   itemWhite->setTextAlignment(Qt::AlignCenter);
   this->model->setItem(row, HISTORY_TABLE_COLS::WHITE_MOVE, itemWhite);
   updateHighlighted(itemWhite);
@@ -88,7 +95,7 @@ void HistoryTable::addBlackMove(const MoveLog& log) {
 
   const int row = this->model->rowCount() - 1;
 
-  auto *itemBlack = new QStandardItem(moveToStr(log));
+  auto* itemBlack = new QStandardItem(moveToStr(log));
   itemBlack->setTextAlignment(Qt::AlignCenter);
   this->model->setItem(row, HISTORY_TABLE_COLS::BLACK_MOVE, itemBlack);
   updateHighlighted(itemBlack);
@@ -97,6 +104,6 @@ void HistoryTable::addBlackMove(const MoveLog& log) {
 
 
 void HistoryTable::cleanTable() {
-  this->model->setRowCount(0);
+  this->model->setRowCount(ConstantsUI::EMPTY_HISTORY_TABLE_ROWS);
   this->highlightedItem = nullptr;
 }

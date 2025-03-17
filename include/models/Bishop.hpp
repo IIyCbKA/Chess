@@ -11,7 +11,7 @@ public:
     Piece(color, PiecesConstants::BISHOP) {}
 
   std::vector<Position> getPossibleMoves(
-    const Board& board, const AttackMap& attackMap, Position curPosition
+    const ModelBoard& board, const AttackMap& attackMap, Position curPosition
   ) override;
 
   ~Bishop() override = default;

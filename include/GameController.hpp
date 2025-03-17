@@ -26,7 +26,12 @@ class GameController final : public QObject {
   void selectSquare(Position pos) const;
   void deselectSquare() const;
   void tryMovePiece(Position to);
+  void performCoreMove(const PerformMoveData& data) const;
   void performMovePiece(const PerformMoveData& data);
+  void afterMoveInModelGameLogic(Position from, Position to);
+  void tryHandleCastling(Position from, Position to) const;
+  void tryPromotePawn(Position to);
+  void updateCheckState() const;
   void movePieceEmit(Position from, Position to);
   void clearCheckAndLastMove() const;
   void endGameCheck();
@@ -52,9 +57,6 @@ signals:
 
 private slots:
   void onSquareClicked(Position pos);
-  void onCastlingMoveRook(Position from, Position to);
-  void onPawnPromotion(Position pos, PiecesConstants::PIECE_COLORS color);
-  void onCheck(Position pos, PiecesConstants::PIECE_COLORS color) const;
   void onStockfishMove(const QString& bestMove);
 };
 

@@ -2,16 +2,15 @@
 #define PROMOTIONDIALOG_HPP
 
 #include <ui/ui_PromotionDialog.hpp>
-#include <utils/position.hpp>
 #include <constants.hpp>
 
+#include <memory>
 #include <QDialog>
 #include <QPushButton>
 #include <QString>
 
 class PromotionDialog final : public QDialog {
-  Q_OBJECT
-  Ui::PromotionDialog ui;
+  std::unique_ptr<Ui::PromotionDialog> ui;
   PiecesConstants::PIECE_TYPES selectedType = PiecesConstants::PIECE_TYPES::QUEEN;
   PiecesConstants::PIECE_COLORS pieceColor;
 
@@ -23,12 +22,6 @@ public:
   [[nodiscard]] PiecesConstants::PIECE_TYPES getSelectedType() const { return this->selectedType; }
 
   ~PromotionDialog() override = default;
-
-private slots:
-  void onQueenClicked();
-  void onRookClicked();
-  void onKnightClicked();
-  void onBishopClicked();
 };
 
 #endif //PROMOTIONDIALOG_HPP

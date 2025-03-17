@@ -29,7 +29,12 @@ void BoardView::resizeEvent(QResizeEvent* event) {
   QGraphicsView::resizeEvent(event);
 
   updateSizes();
-  setSceneRect(0, 0, this->boardSize, this->boardSize);
+  setSceneRect(
+    ConstantsUI::SCENE_X_INDENTATION,
+    ConstantsUI::SCENE_Y_INDENTATION,
+    this->boardSize,
+    this->boardSize
+  );
 
   for (size_t row = 0; row < BoardConstants::SQUARES_ROWS_COLS; ++row) {
     for (size_t col = 0; col < BoardConstants::SQUARES_ROWS_COLS; ++col) {
@@ -160,4 +165,14 @@ void BoardView::applyMoveEffect(
 ) const {
   removePiece(from);
   setupPiece(to, color, type);
+}
+
+
+void BoardView::replacePiece(
+  const Position pos,
+  const PiecesConstants::PIECE_COLORS color,
+  const PiecesConstants::PIECE_TYPES newType
+) const {
+  removePiece(pos);
+  setupPiece(pos, color, newType);
 }

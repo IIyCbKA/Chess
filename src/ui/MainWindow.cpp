@@ -2,25 +2,33 @@
 #include <ui/PromotionDialog.hpp>
 #include <GameState.hpp>
 
-MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent), ui() {
-  this->ui.setupUi(this);
-  this->controller = new GameController(this->ui.chessBoardView);
-  tryUpdateDifficultyBtn(this->ui.easyBotBtn, StockfishConstants::EASY_DEPTH);
+MainWindow::MainWindow(QWidget* parent)
+  : QMainWindow(parent), ui(std::make_unique<Ui::MainWindow>())
+{
+  this->ui->setupUi(this);
+  this->controller = new GameController(this->ui->chessBoardView);
+  tryUpdateDifficultyBtn(this->ui->easyBotBtn, StockfishConstants::EASY_DEPTH);
   connect(
-    this->ui.restartGameBtn, &QPushButton::clicked,
+    this->ui->restartGameBtn, &QPushButton::clicked,
     this, &MainWindow::onRestartGameClicked
   );
   connect(
-    this->ui.easyBotBtn, &QPushButton::clicked,
-    this, &MainWindow::onEasyBotBtnClicked
+    this->ui->easyBotBtn, &QPushButton::clicked,
+    this, [this]() -> void {
+      tryUpdateDifficultyBtn(this->ui->easyBotBtn, StockfishConstants::EASY_DEPTH);
+    }
   );
   connect(
-    this->ui.mediumBotBtn, &QPushButton::clicked,
-    this, &MainWindow::onMediumBotBtnClicked
+    this->ui->mediumBotBtn, &QPushButton::clicked,
+    this, [this]() -> void {
+      tryUpdateDifficultyBtn(this->ui->mediumBotBtn, StockfishConstants::MEDIUM_DEPTH);
+    }
   );
   connect(
-    this->ui.hardBotBtn, &QPushButton::clicked,
-    this, &MainWindow::onHardBotBtnClicked
+    this->ui->hardBotBtn, &QPushButton::clicked,
+    this, [this]() -> void {
+      tryUpdateDifficultyBtn(this->ui->hardBotBtn, StockfishConstants::HARD_DEPTH);
+    }
   );
   connect(
     this->controller, &GameController::moveMade,
@@ -38,7 +46,7 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent), ui() {
 
 
 void MainWindow::init() const {
-  this->ui.chessBoardView->init();
+  this->ui->chessBoardView->init();
   this->controller->restartGame();
 }
 
@@ -46,10 +54,10 @@ void MainWindow::init() const {
 void MainWindow::updateMoveIndicator() const {
   if (GameState::instance().isGameActive()) {
     if (GameState::instance().isUserMove())
-      this->ui.moveIndicator->setText(ConstantsUI::YOUR_MOVE);
-    else this->ui.moveIndicator->setText(ConstantsUI::BOT_MOVE);
+      this->ui->moveIndicator->setText(ConstantsUI::YOUR_MOVE);
+    else this->ui->moveIndicator->setText(ConstantsUI::BOT_MOVE);
   } else {
-    this->ui.moveIndicator->setText(
+    this->ui->moveIndicator->setText(
       ConstantsUI::ENDGAME_TEXTS[GameState::instance().getActiveColor()][
         GameState::instance().getGameStatus()]
     );
@@ -59,8 +67,8 @@ void MainWindow::updateMoveIndicator() const {
 
 void MainWindow::onRestartGameClicked() const {
   this->controller->restartGame();
-  this->ui.chessBoardView->turningBoard();
-  this->ui.tableView->cleanTable();
+  this->ui->chessBoardView->turningBoard();
+  this->ui->tableView->cleanTable();
   GameState::instance().restart();
   updateMoveIndicator();
   this->controller->tryEngineMove();
@@ -69,8 +77,8 @@ void MainWindow::onRestartGameClicked() const {
 
 void MainWindow::onMoveMade(const MoveLog& log) const {
   if (GameState::instance().getActiveColor() == PiecesConstants::PIECE_COLORS::WHITE)
-    this->ui.tableView->addWhiteMove(log);
-  else this->ui.tableView->addBlackMove(log);
+    this->ui->tableView->addWhiteMove(log);
+  else this->ui->tableView->addBlackMove(log);
 
   GameState::instance().moveMade();
   updateMoveIndicator();
@@ -111,28 +119,4 @@ void MainWindow::tryUpdateDifficultyBtn(
     clicked->setStyleSheet(ConstantsUI::SELECTED_DIFFICULTY_BTN_STYLESHEET);
     this->selectedDifficultyBtn = clicked;
   }
-}
-
-
-void MainWindow::onEasyBotBtnClicked() {
-  tryUpdateDifficultyBtn(
-    qobject_cast<QPushButton*>(sender()),
-    StockfishConstants::EASY_DEPTH
-  );
-}
-
-
-void MainWindow::onMediumBotBtnClicked() {
-  tryUpdateDifficultyBtn(
-    qobject_cast<QPushButton*>(sender()),
-    StockfishConstants::MEDIUM_DEPTH
-  );
-}
-
-
-void MainWindow::onHardBotBtnClicked() {
-  tryUpdateDifficultyBtn(
-    qobject_cast<QPushButton*>(sender()),
-    StockfishConstants::HARD_DEPTH
-  );
 }
