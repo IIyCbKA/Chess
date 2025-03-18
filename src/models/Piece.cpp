@@ -2,9 +2,10 @@
 #include <utils/utils.hpp>
 
 Piece::Piece(
+  const BoardModelContext boardContext,
   const PiecesConstants::PIECE_COLORS color,
   const PiecesConstants::PIECE_TYPES type
-) : color(color), type(type) {}
+) : boardContext(boardContext), color(color), type(type) {}
 
 
 bool Piece::isWithinBounds(

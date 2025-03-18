@@ -9,26 +9,21 @@
 #include <optional>
 
 class Pawn final : public Piece {
-  static bool tryAddDefaultMove(
-    const ModelBoard& board, Position curPosition,
-    int deltaRow, int deltaCol, std::vector<Position>& moves
-  );
-  void getDefaultMoves(
-    const ModelBoard& board, Position curPosition, std::vector<Position>& moves
+  bool tryAddDefaultMove(
+    Position curPosition, int deltaRow, int deltaCol, std::vector<Position>& moves
   ) const;
-  void getAttackMoves(
-    const ModelBoard& board, Position curPosition, std::vector<Position>& moves
-  ) const;
+  void getDefaultMoves(Position curPosition, std::vector<Position>& moves) const;
+  void getAttackMoves(Position curPosition, std::vector<Position>& moves) const;
 
   [[nodiscard]] std::optional<EnPassant> tryGetEnPassantCapture(Position to) const;
 
 public:
-  explicit Pawn(const PiecesConstants::PIECE_COLORS color) :
-    Piece(color, PiecesConstants::PAWN) {}
+  Pawn(
+    const BoardModelContext boardContext,
+    const PiecesConstants::PIECE_COLORS color
+  ) : Piece(boardContext, color, PiecesConstants::PAWN) {}
 
-  std::vector<Position> getPossibleMoves(
-    const ModelBoard& board, const AttackMap& attackMap, Position curPosition
-  ) override;
+  std::vector<Position> getPossibleMoves(Position curPosition) override;
   Position getCapturePosition(Position from, Position to) override;
 
   ~Pawn() override = default;

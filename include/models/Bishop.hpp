@@ -7,12 +7,12 @@
 
 class Bishop final : public Piece {
 public:
-  explicit Bishop(const PiecesConstants::PIECE_COLORS color) :
-    Piece(color, PiecesConstants::BISHOP) {}
+  Bishop(
+    const BoardModelContext boardContext,
+    const PiecesConstants::PIECE_COLORS color
+  ) : Piece(boardContext, color, PiecesConstants::BISHOP) {}
 
-  std::vector<Position> getPossibleMoves(
-    const ModelBoard& board, const AttackMap& attackMap, Position curPosition
-  ) override;
+  std::vector<Position> getPossibleMoves(Position curPosition) override;
 
   ~Bishop() override = default;
 };

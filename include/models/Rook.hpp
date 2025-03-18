@@ -7,12 +7,12 @@
 
 class Rook final : public Piece {
 public:
-  explicit Rook(const PiecesConstants::PIECE_COLORS color) :
-    Piece(color, PiecesConstants::ROOK) {}
+  Rook(
+    const BoardModelContext boardContext,
+    const PiecesConstants::PIECE_COLORS color
+  ) : Piece(boardContext, color, PiecesConstants::ROOK) {}
 
-  std::vector<Position> getPossibleMoves(
-    const ModelBoard& board, const AttackMap& attackMap, Position curPosition
-  ) override;
+  std::vector<Position> getPossibleMoves(Position curPosition) override;
 
   ~Rook() override = default;
 };

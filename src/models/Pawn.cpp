@@ -5,14 +5,14 @@
 #include <algorithm>
 
 bool Pawn::tryAddDefaultMove(
-  const ModelBoard& board, const Position curPosition,
+  const Position curPosition,
   const int deltaRow, const int deltaCol, std::vector<Position> &moves
-) {
+) const {
   if (isWithinBounds(curPosition, deltaRow, deltaCol)) {
     const size_t tempRow = curPosition.row + deltaRow;
     const size_t tempCol = curPosition.col + deltaCol;
 
-    if (!board[tempRow][tempCol].get()) {
+    if (!this->boardContext.isOccupied({tempRow, tempCol})) {
       moves.emplace_back(tempRow, tempCol);
       return true;
     }
@@ -23,22 +23,24 @@ bool Pawn::tryAddDefaultMove(
 
 
 void Pawn::getDefaultMoves(
-  const ModelBoard& board, const Position curPosition, std::vector<Position>& moves
+  const Position curPosition,
+  std::vector<Position>& moves
 ) const {
   auto [deltaRow, deltaCol] = PiecesConstants::PAWN_DEFAULT_MOVE[this->color];
   if (
-    tryAddDefaultMove(board, curPosition, deltaRow, deltaCol, moves)
+    tryAddDefaultMove(curPosition, deltaRow, deltaCol, moves)
     && !this->isMoved
   ) {
     const size_t tempRow = curPosition.row + deltaRow;
     const size_t tempCol = curPosition.col + deltaCol;
-    tryAddDefaultMove(board, {tempRow, tempCol}, deltaRow, deltaCol, moves);
+    tryAddDefaultMove({tempRow, tempCol}, deltaRow, deltaCol, moves);
   }
 }
 
 
 void Pawn::getAttackMoves(
-  const ModelBoard& board, const Position curPosition, std::vector<Position> &moves
+  const Position curPosition,
+  std::vector<Position> &moves
 ) const {
   for (
     const auto [deltaRow, deltaCol] :
@@ -48,7 +50,7 @@ void Pawn::getAttackMoves(
       size_t tempRow = curPosition.row + deltaRow;
       size_t tempCol = curPosition.col + deltaCol;
 
-      if (const auto piece = board[tempRow][tempCol].get()) {
+      if (const auto piece = this->boardContext.getPieceAt({tempRow, tempCol})) {
         if (piece->getColor() != this->color) moves.emplace_back(tempRow, tempCol);
       } else if (tryGetEnPassantCapture({tempRow, tempCol})) {
         moves.emplace_back(tempRow, tempCol);
@@ -72,12 +74,10 @@ std::optional<EnPassant> Pawn::tryGetEnPassantCapture(const Position to) const {
 }
 
 
-std::vector<Position> Pawn::getPossibleMoves(
-  const ModelBoard& board, const AttackMap& attackMap, const Position curPosition
-) {
+std::vector<Position> Pawn::getPossibleMoves(const Position curPosition) {
   std::vector<Position> moves;
-  getDefaultMoves(board, curPosition, moves);
-  getAttackMoves(board, curPosition, moves);
+  getDefaultMoves(curPosition, moves);
+  getAttackMoves(curPosition, moves);
 
   return moves;
 }

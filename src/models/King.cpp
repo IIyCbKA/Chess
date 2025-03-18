@@ -1,28 +1,25 @@
 #include <models/King.hpp>
 #include <constants.hpp>
 
-bool King::isValidCastleSquare(
-  const ModelBoard& board,
-  const AttackMap& attackMap,
-  const Position pos
-) {
+bool King::isValidCastleSquare(const Position pos) const {
   return
-    !board[pos.row][pos.col] &&
-    !attackMap[pos.row][pos.col];
+    !this->boardContext.isOccupied(pos) &&
+    !this->boardContext.isUnderAttack(pos);
 }
 
 
-bool King::isValidRook(const ModelBoard& board, const Position pos) const {
+bool King::isValidRook(const Position pos) const {
+  const auto piece = this->boardContext.getPieceAt(pos);
+
   return
-    board[pos.row][pos.col]
-    && board[pos.row][pos.col]->getColor() == this->color
-    && board[pos.row][pos.col]->getType() == PiecesConstants::PIECE_TYPES::ROOK
-    && !board[pos.row][pos.col]->getIsMoved();
+    piece != nullptr
+    && piece->getColor() == this->color
+    && piece->getType() == PiecesConstants::PIECE_TYPES::ROOK
+    && !piece->getIsMoved();
 }
 
 
 void King::getDefaultMoves(
-  const ModelBoard& board,
   const Position curPosition,
   std::vector<Position>& moves
 ) const {
@@ -31,7 +28,7 @@ void King::getDefaultMoves(
       const size_t tempRow = curPosition.row + deltaRow;
       const size_t tempCol = curPosition.col + deltaCol;
 
-      if (const auto piece = board[tempRow][tempCol].get()) {
+      if (const auto piece = this->boardContext.getPieceAt({tempRow, tempCol})) {
         if (piece->getColor() != this->color) moves.emplace_back(tempRow, tempCol);
       } else {
         moves.emplace_back(tempRow, tempCol);
@@ -42,8 +39,6 @@ void King::getDefaultMoves(
 
 
 bool King::isCanCastling(
-  const ModelBoard& board,
-  const AttackMap& attackMap,
   const Position pos,
   const std::vector<size_t>& checkedCols,
   const size_t rookCol
@@ -52,22 +47,17 @@ bool King::isCanCastling(
 
   for (const size_t checkedCol : checkedCols) {
     const Position checkPos{pos.row, checkedCol};
-    if (!isValidCastleSquare(board, attackMap, checkPos)) return false;
+    if (!isValidCastleSquare(checkPos)) return false;
   }
 
   const Position rookPos{pos.row, rookCol};
-  return isValidRook(board, rookPos);
+  return isValidRook(rookPos);
 }
 
 
-void King::canKingSideCastling(
-  const ModelBoard& board,
-  const AttackMap& attackMap,
-  Position pos,
-  std::vector<Position> &moves
-) const {
+void King::canKingSideCastling(Position pos, std::vector<Position>& moves) const {
   if (isCanCastling(
-    board, attackMap, pos, BoardConstants::KINGSIDE_CASTLING_CHECKED_COLS,
+    pos, BoardConstants::KINGSIDE_CASTLING_CHECKED_COLS,
     BoardConstants::DEFAULT_KINGSIDE_ROOK_COL
   )) {
     moves.emplace_back(pos.row, BoardConstants::KINGSIDE_CASTLING_NEW_KING_COL);
@@ -75,14 +65,9 @@ void King::canKingSideCastling(
 }
 
 
-void King::canQueenSideCastling(
-  const ModelBoard& board,
-  const AttackMap& attackMap,
-  Position pos,
-  std::vector<Position>& moves
-) const {
+void King::canQueenSideCastling(Position pos, std::vector<Position>& moves) const {
   if (isCanCastling(
-    board, attackMap, pos, BoardConstants::QUEENSIDE_CASTLING_CHECKED_COLS,
+    pos, BoardConstants::QUEENSIDE_CASTLING_CHECKED_COLS,
     BoardConstants::DEFAULT_QUEENSIDE_ROOK_COL
   )) {
     moves.emplace_back(pos.row, BoardConstants::QUEENSIDE_CASTLING_NEW_KING_COL);
@@ -90,13 +75,11 @@ void King::canQueenSideCastling(
 }
 
 
-std::vector<Position> King::getPossibleMoves(
-  const ModelBoard& board, const AttackMap& attackMap, const Position curPosition
-) {
+std::vector<Position> King::getPossibleMoves(const Position curPosition) {
   std::vector<Position> moves;
-  getDefaultMoves(board, curPosition, moves);
-  canKingSideCastling(board, attackMap, curPosition, moves);
-  canQueenSideCastling(board, attackMap, curPosition, moves);
+  getDefaultMoves(curPosition, moves);
+  canKingSideCastling(curPosition, moves);
+  canQueenSideCastling(curPosition, moves);
 
   return moves;
 }

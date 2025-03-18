@@ -7,12 +7,12 @@
 
 class Knight final : public Piece {
 public:
-  explicit Knight(const PiecesConstants::PIECE_COLORS color) :
-    Piece(color, PiecesConstants::KNIGHT) {}
+  Knight(
+    const BoardModelContext boardContext,
+    const PiecesConstants::PIECE_COLORS color
+  ) : Piece(boardContext, color, PiecesConstants::KNIGHT) {}
 
-  std::vector<Position> getPossibleMoves(
-    const ModelBoard& board, const AttackMap& attackMap, Position curPosition
-  ) override;
+  std::vector<Position> getPossibleMoves(Position curPosition) override;
 
   ~Knight() override = default;
 };

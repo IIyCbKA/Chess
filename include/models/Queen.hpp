@@ -7,12 +7,12 @@
 
 class Queen final : public Piece {
 public:
-  explicit Queen(const PiecesConstants::PIECE_COLORS color) :
-    Piece(color, PiecesConstants::QUEEN) {}
+  Queen(
+    const BoardModelContext boardContext,
+    const PiecesConstants::PIECE_COLORS color
+  ) : Piece(boardContext, color, PiecesConstants::QUEEN) {}
 
-  std::vector<Position> getPossibleMoves(
-    const ModelBoard& board, const AttackMap& attackMap, Position curPosition
-  ) override;
+  std::vector<Position> getPossibleMoves(Position curPosition) override;
 
   ~Queen() override = default;
 };

@@ -1,4 +1,5 @@
 #include <models/BoardModel.hpp>
+#include <models/BoardModelContext.hpp>
 #include <models/Bishop.hpp>
 #include <models/King.hpp>
 #include <models/Knight.hpp>
@@ -45,11 +46,7 @@ void BoardModel::updateHalfMoveClock(const Position from, const Position to) {
 
 std::vector<Position> BoardModel::getPossibleMoves(const Position pos) const {
   if (this->board[pos.row][pos.col]) {
-    return this->board[pos.row][pos.col]->getPossibleMoves(
-      this->board,
-      this->attackMap,
-      pos
-    );
+    return this->board[pos.row][pos.col]->getPossibleMoves(pos);
   }
 
   return {};
@@ -184,22 +181,23 @@ void BoardModel::changePawnType(
 std::unique_ptr<Piece> BoardModel::createPiece(
   const PiecesConstants::PIECE_TYPES type,
   const PiecesConstants::PIECE_COLORS color
-) {
+) const {
+  const BoardModelContext boardContext(*this);
   switch (type) {
     case PiecesConstants::PIECE_TYPES::PAWN:
-      return std::make_unique<Pawn>(Pawn(color));
+      return std::make_unique<Pawn>(Pawn(boardContext, color));
     case PiecesConstants::PIECE_TYPES::QUEEN:
-      return std::make_unique<Queen>(Queen(color));
+      return std::make_unique<Queen>(Queen(boardContext, color));
     case PiecesConstants::PIECE_TYPES::ROOK:
-     return std::make_unique<Rook>(Rook(color));
+     return std::make_unique<Rook>(Rook(boardContext, color));
     case PiecesConstants::PIECE_TYPES::KNIGHT:
-      return std::make_unique<Knight>(Knight(color));
+      return std::make_unique<Knight>(Knight(boardContext, color));
     case PiecesConstants::PIECE_TYPES::BISHOP:
-      return std::make_unique<Bishop>(Bishop(color));
+      return std::make_unique<Bishop>(Bishop(boardContext, color));
     case PiecesConstants::PIECE_TYPES::KING:
-      return std::make_unique<King>(King(color));
+      return std::make_unique<King>(King(boardContext, color));
     default:
-      return std::make_unique<Queen>(Queen(color));
+      return std::make_unique<Queen>(Queen(boardContext, color));
   }
 }
 

@@ -19,13 +19,23 @@ GameController::GameController(BoardView* view, QObject* parent)
 }
 
 
-void GameController::restartGame() const {
+void GameController::cleanAll() const {
   this->model->cleanBoard();
   this->view->cleanBoard();
+}
+
+
+void GameController::setupPieces() const {
   for (const auto& [pos, color, type] : BoardConstants::STANDARD_SETUP) {
     this->model->setupPiece(pos, color, type);
     this->view->setupPiece(pos, color, type);
   }
+}
+
+
+void GameController::restartGame() const {
+  cleanAll();
+  setupPieces();
 }
 
 

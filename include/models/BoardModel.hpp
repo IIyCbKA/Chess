@@ -18,11 +18,6 @@ class BoardModel {
   AttackMap attackMap;
   size_t halfMoveClock = 0;
 
-  static std::unique_ptr<Piece> createPiece(
-    PiecesConstants::PIECE_TYPES type,
-    PiecesConstants::PIECE_COLORS color
-  );
-
   void updateHalfMoveClock(Position from, Position to);
   bool checkPossibleMove(Position from, Position to);
   [[nodiscard]] std::vector<Position> getPossibleMoves(Position pos) const;
@@ -30,6 +25,10 @@ class BoardModel {
   [[nodiscard]] bool isPosUnderAttack(
     Position checkPos,
     PiecesConstants::PIECE_COLORS opponentColor
+  ) const;
+  [[nodiscard]] std::unique_ptr<Piece> createPiece(
+    PiecesConstants::PIECE_TYPES type,
+    PiecesConstants::PIECE_COLORS color
   ) const;
 
 public:

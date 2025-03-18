@@ -23,6 +23,8 @@ class GameController final : public QObject {
   std::optional<PiecesConstants::PIECE_TYPES> promotionPending;
   std::optional<PiecesConstants::PIECE_TYPES> enginePromotionSelection;
 
+  void cleanAll() const;
+  void setupPieces() const;
   void selectSquare(Position pos) const;
   void deselectSquare() const;
   void tryMovePiece(Position to);
