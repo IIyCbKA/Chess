@@ -10,7 +10,7 @@ public:
   Rook(
     const BoardModelContext boardContext,
     const PiecesConstants::PIECE_COLORS color
-  ) : Piece(boardContext, color, PiecesConstants::ROOK) {}
+  ) : Piece(boardContext, color, ROOK_TYPE) {}
 
   std::vector<Position> getPossibleMoves(Position curPosition) override;
 

@@ -52,14 +52,14 @@ void MainWindow::init() const {
 
 
 void MainWindow::updateMoveIndicator() const {
-  if (GameState::instance().isGameActive()) {
-    if (GameState::instance().isUserMove())
+  if (gameState.isGameActive()) {
+    if (gameState.isUserMove())
       this->ui->moveIndicator->setText(ConstantsUI::YOUR_MOVE);
     else this->ui->moveIndicator->setText(ConstantsUI::BOT_MOVE);
   } else {
     this->ui->moveIndicator->setText(
-      ConstantsUI::ENDGAME_TEXTS[GameState::instance().getActiveColor()][
-        GameState::instance().getGameStatus()]
+      ConstantsUI::ENDGAME_TEXTS[gameState.getActiveColor()][
+        gameState.getGameStatus()]
     );
   }
 }
@@ -69,18 +69,18 @@ void MainWindow::onRestartGameClicked() const {
   this->controller->restartGame();
   this->ui->chessBoardView->turningBoard();
   this->ui->tableView->cleanTable();
-  GameState::instance().restart();
+  gameState.restart();
   updateMoveIndicator();
   this->controller->tryEngineMove();
 }
 
 
 void MainWindow::onMoveMade(const MoveLog& log) const {
-  if (GameState::instance().getActiveColor() == PiecesConstants::PIECE_COLORS::WHITE)
+  if (gameState.getActiveColor() == WHITE_COLOR)
     this->ui->tableView->addWhiteMove(log);
   else this->ui->tableView->addBlackMove(log);
 
-  GameState::instance().moveMade();
+  gameState.moveMade();
   updateMoveIndicator();
   this->controller->tryEngineMove();
 }
@@ -91,7 +91,7 @@ void MainWindow::onPawnPromotion(
   const PiecesConstants::PIECE_COLORS color
 ) {
   auto dialog = PromotionDialog(color, this);
-  PiecesConstants::PIECE_TYPES chosenType = PiecesConstants::PIECE_TYPES::QUEEN;
+  PiecesConstants::PIECE_TYPES chosenType = QUEEN_TYPE;
 
   if (dialog.exec() == QDialog::Accepted) chosenType = dialog.getSelectedType();
   this->controller->changePawnType(pos, chosenType, color);

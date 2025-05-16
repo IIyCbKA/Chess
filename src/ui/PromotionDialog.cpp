@@ -9,28 +9,28 @@ PromotionDialog::PromotionDialog(
   connect(
     this->ui->Queen, &QPushButton::clicked,
     this, [this]() -> void {
-      this->selectedType = PiecesConstants::PIECE_TYPES::QUEEN;
+      this->selectedType = QUEEN_TYPE;
       accept();
     }
   );
   connect(
     this->ui->Rook, &QPushButton::clicked,
     this, [this]() -> void {
-      this->selectedType = PiecesConstants::PIECE_TYPES::ROOK;
+      this->selectedType = ROOK_TYPE;
       accept();
     }
   );
   connect(
     this->ui->Knight, &QPushButton::clicked,
     this, [this]() -> void {
-      this->selectedType = PiecesConstants::PIECE_TYPES::KNIGHT;
+      this->selectedType = KNIGHT_TYPE;
       accept();
     }
   );
   connect(
     this->ui->Bishop, &QPushButton::clicked,
     this, [this]() -> void {
-      this->selectedType = PiecesConstants::PIECE_TYPES::BISHOP;
+      this->selectedType = BISHOP_TYPE;
       accept();
     }
   );
@@ -39,13 +39,13 @@ PromotionDialog::PromotionDialog(
 
 void PromotionDialog::initPiecesIcons() const {
   setIcon(this->ui->Queen,  ResourcesConstants::PIECES_PATHS[
-    this->pieceColor][PiecesConstants::PIECE_TYPES::QUEEN]);
+    this->pieceColor][QUEEN_TYPE]);
   setIcon(this->ui->Rook,   ResourcesConstants::PIECES_PATHS[
-    this->pieceColor][PiecesConstants::PIECE_TYPES::ROOK]);
+    this->pieceColor][ROOK_TYPE]);
   setIcon(this->ui->Knight, ResourcesConstants::PIECES_PATHS[
-    this->pieceColor][PiecesConstants::PIECE_TYPES::KNIGHT]);
+    this->pieceColor][KNIGHT_TYPE]);
   setIcon(this->ui->Bishop, ResourcesConstants::PIECES_PATHS[
-    this->pieceColor][PiecesConstants::PIECE_TYPES::BISHOP]);
+    this->pieceColor][BISHOP_TYPE]);
 }
 
 

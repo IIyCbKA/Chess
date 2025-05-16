@@ -9,6 +9,16 @@
 #include <QHash>
 #include <QString>
 
+#define PAWN_TYPE PiecesConstants::PIECE_TYPES::PAWN
+#define ROOK_TYPE PiecesConstants::PIECE_TYPES::ROOK
+#define BISHOP_TYPE PiecesConstants::PIECE_TYPES::BISHOP
+#define QUEEN_TYPE PiecesConstants::PIECE_TYPES::QUEEN
+#define KING_TYPE PiecesConstants::PIECE_TYPES::KING
+#define KNIGHT_TYPE PiecesConstants::PIECE_TYPES::KNIGHT
+
+#define BLACK_COLOR PiecesConstants::PIECE_COLORS::BLACK
+#define WHITE_COLOR PiecesConstants::PIECE_COLORS::WHITE
+
 QFont createFont(int pointSize);
 
 namespace Colors {
@@ -87,23 +97,23 @@ namespace ResourcesConstants {
     QHash<PiecesConstants::PIECE_TYPES, QString>
   > PIECES_PATHS = {
     {
-      PiecesConstants::PIECE_COLORS::WHITE, {
-        {PiecesConstants::PIECE_TYPES::KING,   QStringLiteral(":images/wKing.svg")},
-        {PiecesConstants::PIECE_TYPES::QUEEN,  QStringLiteral(":images/wQueen.svg")},
-        {PiecesConstants::PIECE_TYPES::ROOK,   QStringLiteral(":images/wRook.svg")},
-        {PiecesConstants::PIECE_TYPES::KNIGHT, QStringLiteral(":images/wKnight.svg")},
-        {PiecesConstants::PIECE_TYPES::BISHOP, QStringLiteral(":images/wBishop.svg")},
-        {PiecesConstants::PIECE_TYPES::PAWN,   QStringLiteral(":images/wPawn.svg")},
+      WHITE_COLOR, {
+        {KING_TYPE,   QStringLiteral(":images/wKing.svg")},
+        {QUEEN_TYPE,  QStringLiteral(":images/wQueen.svg")},
+        {ROOK_TYPE,   QStringLiteral(":images/wRook.svg")},
+        {KNIGHT_TYPE, QStringLiteral(":images/wKnight.svg")},
+        {BISHOP_TYPE, QStringLiteral(":images/wBishop.svg")},
+        {PAWN_TYPE,   QStringLiteral(":images/wPawn.svg")},
       },
     },
     {
-      PiecesConstants::PIECE_COLORS::BLACK, {
-        {PiecesConstants::PIECE_TYPES::KING,   QStringLiteral(":images/bKing.svg")},
-        {PiecesConstants::PIECE_TYPES::QUEEN,  QStringLiteral(":images/bQueen.svg")},
-        {PiecesConstants::PIECE_TYPES::ROOK,   QStringLiteral(":images/bRook.svg")},
-        {PiecesConstants::PIECE_TYPES::KNIGHT, QStringLiteral(":images/bKnight.svg")},
-        {PiecesConstants::PIECE_TYPES::BISHOP, QStringLiteral(":images/bBishop.svg")},
-        {PiecesConstants::PIECE_TYPES::PAWN,   QStringLiteral(":images/bPawn.svg")},
+      BLACK_COLOR, {
+        {KING_TYPE,   QStringLiteral(":images/bKing.svg")},
+        {QUEEN_TYPE,  QStringLiteral(":images/bQueen.svg")},
+        {ROOK_TYPE,   QStringLiteral(":images/bRook.svg")},
+        {KNIGHT_TYPE, QStringLiteral(":images/bKnight.svg")},
+        {BISHOP_TYPE, QStringLiteral(":images/bBishop.svg")},
+        {PAWN_TYPE,   QStringLiteral(":images/bPawn.svg")},
       },
     },
   };
@@ -160,13 +170,13 @@ namespace ConstantsUI {
     QHash<GameStateConstants::GAME_STATUS, QString>
   > ENDGAME_TEXTS = {
     {
-      PiecesConstants::PIECE_COLORS::BLACK, {
+      BLACK_COLOR, {
         {GameStateConstants::GAME_STATUS::CHECKMATE, QStringLiteral("White checkmated!")},
         {GameStateConstants::GAME_STATUS::STALEMATE, QStringLiteral("White stalemated!")},
       }
     },
     {
-      PiecesConstants::PIECE_COLORS::WHITE, {
+      WHITE_COLOR, {
         {GameStateConstants::GAME_STATUS::CHECKMATE, QStringLiteral("Black checkmated!")},
         {GameStateConstants::GAME_STATUS::STALEMATE, QStringLiteral("Black stalemated!")},
       }
@@ -188,8 +198,8 @@ namespace ConstantsUI {
 
 namespace ConstantsFEN {
   const QHash<PiecesConstants::PIECE_COLORS, char> colorInFEN = {
-    {PiecesConstants::PIECE_COLORS::WHITE, 'w'},
-    {PiecesConstants::PIECE_COLORS::BLACK, 'b'},
+    {WHITE_COLOR, 'w'},
+    {BLACK_COLOR, 'b'},
   };
 
   const QHash<
@@ -197,23 +207,23 @@ namespace ConstantsFEN {
     QHash<PiecesConstants::PIECE_TYPES, char>
   > piecesInFEN = {
     {
-      PiecesConstants::PIECE_COLORS::WHITE, {
-          {PiecesConstants::PIECE_TYPES::PAWN,   'P'},
-          {PiecesConstants::PIECE_TYPES::ROOK,   'R'},
-          {PiecesConstants::PIECE_TYPES::KNIGHT, 'N'},
-          {PiecesConstants::PIECE_TYPES::BISHOP, 'B'},
-          {PiecesConstants::PIECE_TYPES::QUEEN,  'Q'},
-          {PiecesConstants::PIECE_TYPES::KING,   'K'},
+      WHITE_COLOR, {
+          {PAWN_TYPE,   'P'},
+          {ROOK_TYPE,   'R'},
+          {KNIGHT_TYPE, 'N'},
+          {BISHOP_TYPE, 'B'},
+          {QUEEN_TYPE,  'Q'},
+          {KING_TYPE,   'K'},
         },
       },
       {
-        PiecesConstants::PIECE_COLORS::BLACK, {
-          {PiecesConstants::PIECE_TYPES::PAWN,   'p'},
-          {PiecesConstants::PIECE_TYPES::ROOK,   'r'},
-          {PiecesConstants::PIECE_TYPES::KNIGHT, 'n'},
-          {PiecesConstants::PIECE_TYPES::BISHOP, 'b'},
-          {PiecesConstants::PIECE_TYPES::QUEEN,  'q'},
-          {PiecesConstants::PIECE_TYPES::KING,   'k'},
+        BLACK_COLOR, {
+          {PAWN_TYPE,   'p'},
+          {ROOK_TYPE,   'r'},
+          {KNIGHT_TYPE, 'n'},
+          {BISHOP_TYPE, 'b'},
+          {QUEEN_TYPE,  'q'},
+          {KING_TYPE,   'k'},
         },
       },
     };
@@ -327,41 +337,41 @@ namespace BoardConstants {
     PiecesConstants::PIECE_COLORS,
     PiecesConstants::PIECE_TYPES
   >, 32> STANDARD_SETUP = {{
-    {{0, 0}, PiecesConstants::PIECE_COLORS::BLACK, PiecesConstants::PIECE_TYPES::ROOK  },
-    {{0, 1}, PiecesConstants::PIECE_COLORS::BLACK, PiecesConstants::PIECE_TYPES::KNIGHT},
-    {{0, 2}, PiecesConstants::PIECE_COLORS::BLACK, PiecesConstants::PIECE_TYPES::BISHOP},
-    {{0, 3}, PiecesConstants::PIECE_COLORS::BLACK, PiecesConstants::PIECE_TYPES::QUEEN },
-    {{0, 4}, PiecesConstants::PIECE_COLORS::BLACK, PiecesConstants::PIECE_TYPES::KING  },
-    {{0, 5}, PiecesConstants::PIECE_COLORS::BLACK, PiecesConstants::PIECE_TYPES::BISHOP},
-    {{0, 6}, PiecesConstants::PIECE_COLORS::BLACK, PiecesConstants::PIECE_TYPES::KNIGHT},
-    {{0, 7}, PiecesConstants::PIECE_COLORS::BLACK, PiecesConstants::PIECE_TYPES::ROOK  },
+    {{0, 0}, BLACK_COLOR, ROOK_TYPE  },
+    {{0, 1}, BLACK_COLOR, KNIGHT_TYPE},
+    {{0, 2}, BLACK_COLOR, BISHOP_TYPE},
+    {{0, 3}, BLACK_COLOR, QUEEN_TYPE },
+    {{0, 4}, BLACK_COLOR, KING_TYPE  },
+    {{0, 5}, BLACK_COLOR, BISHOP_TYPE},
+    {{0, 6}, BLACK_COLOR, KNIGHT_TYPE},
+    {{0, 7}, BLACK_COLOR, ROOK_TYPE  },
 
-    {{1, 0}, PiecesConstants::PIECE_COLORS::BLACK, PiecesConstants::PIECE_TYPES::PAWN  },
-    {{1, 1}, PiecesConstants::PIECE_COLORS::BLACK, PiecesConstants::PIECE_TYPES::PAWN  },
-    {{1, 2}, PiecesConstants::PIECE_COLORS::BLACK, PiecesConstants::PIECE_TYPES::PAWN  },
-    {{1, 3}, PiecesConstants::PIECE_COLORS::BLACK, PiecesConstants::PIECE_TYPES::PAWN  },
-    {{1, 4}, PiecesConstants::PIECE_COLORS::BLACK, PiecesConstants::PIECE_TYPES::PAWN  },
-    {{1, 5}, PiecesConstants::PIECE_COLORS::BLACK, PiecesConstants::PIECE_TYPES::PAWN  },
-    {{1, 6}, PiecesConstants::PIECE_COLORS::BLACK, PiecesConstants::PIECE_TYPES::PAWN  },
-    {{1, 7}, PiecesConstants::PIECE_COLORS::BLACK, PiecesConstants::PIECE_TYPES::PAWN  },
+    {{1, 0}, BLACK_COLOR, PAWN_TYPE  },
+    {{1, 1}, BLACK_COLOR, PAWN_TYPE  },
+    {{1, 2}, BLACK_COLOR, PAWN_TYPE  },
+    {{1, 3}, BLACK_COLOR, PAWN_TYPE  },
+    {{1, 4}, BLACK_COLOR, PAWN_TYPE  },
+    {{1, 5}, BLACK_COLOR, PAWN_TYPE  },
+    {{1, 6}, BLACK_COLOR, PAWN_TYPE  },
+    {{1, 7}, BLACK_COLOR, PAWN_TYPE  },
 
-    {{7, 0}, PiecesConstants::PIECE_COLORS::WHITE, PiecesConstants::PIECE_TYPES::ROOK  },
-    {{7, 1}, PiecesConstants::PIECE_COLORS::WHITE, PiecesConstants::PIECE_TYPES::KNIGHT},
-    {{7, 2}, PiecesConstants::PIECE_COLORS::WHITE, PiecesConstants::PIECE_TYPES::BISHOP},
-    {{7, 3}, PiecesConstants::PIECE_COLORS::WHITE, PiecesConstants::PIECE_TYPES::QUEEN },
-    {{7, 4}, PiecesConstants::PIECE_COLORS::WHITE, PiecesConstants::PIECE_TYPES::KING  },
-    {{7, 5}, PiecesConstants::PIECE_COLORS::WHITE, PiecesConstants::PIECE_TYPES::BISHOP},
-    {{7, 6}, PiecesConstants::PIECE_COLORS::WHITE, PiecesConstants::PIECE_TYPES::KNIGHT},
-    {{7, 7}, PiecesConstants::PIECE_COLORS::WHITE, PiecesConstants::PIECE_TYPES::ROOK  },
+    {{7, 0}, WHITE_COLOR, ROOK_TYPE  },
+    {{7, 1}, WHITE_COLOR, KNIGHT_TYPE},
+    {{7, 2}, WHITE_COLOR, BISHOP_TYPE},
+    {{7, 3}, WHITE_COLOR, QUEEN_TYPE },
+    {{7, 4}, WHITE_COLOR, KING_TYPE  },
+    {{7, 5}, WHITE_COLOR, BISHOP_TYPE},
+    {{7, 6}, WHITE_COLOR, KNIGHT_TYPE},
+    {{7, 7}, WHITE_COLOR, ROOK_TYPE  },
 
-    {{6, 0}, PiecesConstants::PIECE_COLORS::WHITE, PiecesConstants::PIECE_TYPES::PAWN  },
-    {{6, 1}, PiecesConstants::PIECE_COLORS::WHITE, PiecesConstants::PIECE_TYPES::PAWN  },
-    {{6, 2}, PiecesConstants::PIECE_COLORS::WHITE, PiecesConstants::PIECE_TYPES::PAWN  },
-    {{6, 3}, PiecesConstants::PIECE_COLORS::WHITE, PiecesConstants::PIECE_TYPES::PAWN  },
-    {{6, 4}, PiecesConstants::PIECE_COLORS::WHITE, PiecesConstants::PIECE_TYPES::PAWN  },
-    {{6, 5}, PiecesConstants::PIECE_COLORS::WHITE, PiecesConstants::PIECE_TYPES::PAWN  },
-    {{6, 6}, PiecesConstants::PIECE_COLORS::WHITE, PiecesConstants::PIECE_TYPES::PAWN  },
-    {{6, 7}, PiecesConstants::PIECE_COLORS::WHITE, PiecesConstants::PIECE_TYPES::PAWN  },
+    {{6, 0}, WHITE_COLOR, PAWN_TYPE  },
+    {{6, 1}, WHITE_COLOR, PAWN_TYPE  },
+    {{6, 2}, WHITE_COLOR, PAWN_TYPE  },
+    {{6, 3}, WHITE_COLOR, PAWN_TYPE  },
+    {{6, 4}, WHITE_COLOR, PAWN_TYPE  },
+    {{6, 5}, WHITE_COLOR, PAWN_TYPE  },
+    {{6, 6}, WHITE_COLOR, PAWN_TYPE  },
+    {{6, 7}, WHITE_COLOR, PAWN_TYPE  },
   }};
 }
 

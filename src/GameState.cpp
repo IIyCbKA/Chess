@@ -11,9 +11,9 @@ void GameState::restart() {
   this->userColor = this->userColor == PiecesConstants::WHITE
     ? PiecesConstants::BLACK
     : PiecesConstants::WHITE;
-  this->activeColor = PiecesConstants::WHITE;
+  this->activeColor   = PiecesConstants::WHITE;
   this->inactiveColor = PiecesConstants::BLACK;
-  this->gameStatus = GameStateConstants::ACTIVE;
+  this->gameStatus    = GameStateConstants::ACTIVE;
   this->enPassant.reset();
   this->checkColor.reset();
   this->fullMoveNumber = GameStateConstants::DEFAULT_FULL_MOVE_NUMBER;

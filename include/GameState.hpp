@@ -7,6 +7,8 @@
 
 #include <optional>
 
+#define gameState GameState::instance()
+
 class GameState {
   PiecesConstants::PIECE_COLORS userColor;
   PiecesConstants::PIECE_COLORS activeColor;

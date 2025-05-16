@@ -124,8 +124,8 @@ void BoardView::showPossibleMoves(const std::vector<Position>& moves) const {
 void BoardView::clearHighlights(const HighlightFlags flags) const {
   for (size_t row = 0; row < BoardConstants::SQUARES_ROWS_COLS; ++row) {
     for (size_t col = 0; col < BoardConstants::SQUARES_ROWS_COLS; ++col) {
-      if (flags.isSelect) this->board[row][col]->getRect()->unhighlightSelectSquare();
-      if (flags.isCheck) this->board[row][col]->getRect()->unhighlightCheckSquare();
+      if (flags.isSelect)   this->board[row][col]->getRect()->unhighlightSelectSquare();
+      if (flags.isCheck)    this->board[row][col]->getRect()->unhighlightCheckSquare();
       if (flags.isLastMove) this->board[row][col]->getRect()->unhighlightLastMove();
       this->board[row][col]->hideCircle();
     }

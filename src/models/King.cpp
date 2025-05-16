@@ -14,7 +14,7 @@ bool King::isValidRook(const Position pos) const {
   return
     piece != nullptr
     && piece->getColor() == this->color
-    && piece->getType() == PiecesConstants::PIECE_TYPES::ROOK
+    && piece->getType()  == ROOK_TYPE
     && !piece->getIsMoved();
 }
 

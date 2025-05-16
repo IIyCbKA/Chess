@@ -10,7 +10,7 @@ public:
   Queen(
     const BoardModelContext boardContext,
     const PiecesConstants::PIECE_COLORS color
-  ) : Piece(boardContext, color, PiecesConstants::QUEEN) {}
+  ) : Piece(boardContext, color, QUEEN_TYPE) {}
 
   std::vector<Position> getPossibleMoves(Position curPosition) override;
 

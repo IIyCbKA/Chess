@@ -11,7 +11,7 @@
 
 class PromotionDialog final : public QDialog {
   std::unique_ptr<Ui::PromotionDialog> ui;
-  PiecesConstants::PIECE_TYPES selectedType = PiecesConstants::PIECE_TYPES::QUEEN;
+  PiecesConstants::PIECE_TYPES selectedType = QUEEN_TYPE;
   PiecesConstants::PIECE_COLORS pieceColor;
 
   static void setIcon(QPushButton* button, const QString& iconPath);

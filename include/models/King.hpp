@@ -21,7 +21,7 @@ public:
   King(
     const BoardModelContext boardContext,
     const PiecesConstants::PIECE_COLORS color
-  ) : Piece(boardContext, color, PiecesConstants::KING) {}
+  ) : Piece(boardContext, color, KING_TYPE) {}
 
   std::vector<Position> getPossibleMoves(Position curPosition) override;
 

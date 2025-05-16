@@ -21,7 +21,7 @@ public:
   Pawn(
     const BoardModelContext boardContext,
     const PiecesConstants::PIECE_COLORS color
-  ) : Piece(boardContext, color, PiecesConstants::PAWN) {}
+  ) : Piece(boardContext, color, PAWN_TYPE) {}
 
   std::vector<Position> getPossibleMoves(Position curPosition) override;
   Position getCapturePosition(Position from, Position to) override;

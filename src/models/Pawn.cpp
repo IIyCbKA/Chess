@@ -62,7 +62,7 @@ void Pawn::getAttackMoves(
 
 std::optional<EnPassant> Pawn::tryGetEnPassantCapture(const Position to) const {
   if (
-    const auto enPassant = GameState::instance().getEnPassant();
+    const auto enPassant = gameState.getEnPassant();
     enPassant.has_value()
     && enPassant->enPassantPosition == to
     && enPassant->pawnColor != this->color
@@ -91,7 +91,7 @@ Position Pawn::getCapturePosition(const Position from, const Position to) {
     maxRow - minRow == BoardConstants::PAWN_ROWS_MOVE_FOR_EN_PASSANT
   ) {
     const Position enPassantPosition = {minRow + 1, to.col};
-    GameState::instance().setEnPassant(
+    gameState.setEnPassant(
       EnPassant{
         .pawnPosition = to,
         .enPassantPosition = enPassantPosition,

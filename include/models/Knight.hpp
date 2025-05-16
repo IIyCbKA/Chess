@@ -10,7 +10,7 @@ public:
   Knight(
     const BoardModelContext boardContext,
     const PiecesConstants::PIECE_COLORS color
-  ) : Piece(boardContext, color, PiecesConstants::KNIGHT) {}
+  ) : Piece(boardContext, color, KNIGHT_TYPE) {}
 
   std::vector<Position> getPossibleMoves(Position curPosition) override;
 

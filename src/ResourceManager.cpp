@@ -11,17 +11,17 @@ ResourceManager& ResourceManager::instance() {
 
 ResourceManager::ResourceManager() {
   constexpr std::array colors = {
-    PiecesConstants::PIECE_COLORS::WHITE,
-    PiecesConstants::PIECE_COLORS::BLACK
+    WHITE_COLOR,
+    BLACK_COLOR,
   };
 
   constexpr std::array types = {
-    PiecesConstants::PIECE_TYPES::PAWN,
-    PiecesConstants::PIECE_TYPES::KING,
-    PiecesConstants::PIECE_TYPES::QUEEN,
-    PiecesConstants::PIECE_TYPES::ROOK,
-    PiecesConstants::PIECE_TYPES::BISHOP,
-    PiecesConstants::PIECE_TYPES::KNIGHT
+    PAWN_TYPE,
+    KING_TYPE,
+    QUEEN_TYPE,
+    ROOK_TYPE,
+    BISHOP_TYPE,
+    KNIGHT_TYPE,
   };
 
   for (auto color : colors) {

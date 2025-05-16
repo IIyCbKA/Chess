@@ -17,31 +17,31 @@ inline bool inRange(const int value, const int min, const int max) {
 inline PiecesConstants::PIECE_TYPES upperCharToPieceType(const char ch) {
   switch (ch) {
     case PiecesConstants::QUEEN_CHAR:
-      return PiecesConstants::PIECE_TYPES::QUEEN;
+      return QUEEN_TYPE;
     case PiecesConstants::ROOK_CHAR:
-      return PiecesConstants::PIECE_TYPES::ROOK;
+      return ROOK_TYPE;
     case PiecesConstants::KNIGHT_CHAR:
-      return PiecesConstants::PIECE_TYPES::KNIGHT;
+      return KNIGHT_TYPE;
     case PiecesConstants::BISHOP_CHAR:
-      return PiecesConstants::PIECE_TYPES::BISHOP;
+      return BISHOP_TYPE;
     case PiecesConstants::KING_CHAR:
-      return PiecesConstants::PIECE_TYPES::KING;
+      return KING_TYPE;
     case PiecesConstants::PAWN_CHAR:
-      return PiecesConstants::PIECE_TYPES::PAWN;
+      return PAWN_TYPE;
     default:
-      return PiecesConstants::PIECE_TYPES::QUEEN;
+      return QUEEN_TYPE;
   }
 }
 
 inline QString pieceTypeToHistoryStr(const PiecesConstants::PIECE_TYPES type) {
   switch (type) {
-    case PiecesConstants::PIECE_TYPES::QUEEN:
+    case QUEEN_TYPE:
       return ConstantsUI::HISTORY_PROMOTION_TO_QUEEN;
-    case PiecesConstants::PIECE_TYPES::ROOK:
+    case ROOK_TYPE:
       return ConstantsUI::HISTORY_PROMOTION_TO_ROOK;
-    case PiecesConstants::PIECE_TYPES::KNIGHT:
+    case KNIGHT_TYPE:
       return ConstantsUI::HISTORY_PROMOTION_TO_KNIGHT;
-    case PiecesConstants::PIECE_TYPES::BISHOP:
+    case BISHOP_TYPE:
       return ConstantsUI::HISTORY_PROMOTION_TO_BISHOP;
     default:
       return ConstantsUI::HISTORY_PROMOTION_TO_QUEEN;

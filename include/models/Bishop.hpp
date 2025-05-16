@@ -10,7 +10,7 @@ public:
   Bishop(
     const BoardModelContext boardContext,
     const PiecesConstants::PIECE_COLORS color
-  ) : Piece(boardContext, color, PiecesConstants::BISHOP) {}
+  ) : Piece(boardContext, color, BISHOP_TYPE) {}
 
   std::vector<Position> getPossibleMoves(Position curPosition) override;
 
